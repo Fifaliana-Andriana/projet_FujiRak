@@ -1,12 +1,4 @@
-DROP TABLE IF EXISTS admin_logs;
-DROP TABLE IF EXISTS soldes;
-DROP TABLE IF EXISTS pertes;
-DROP TABLE IF EXISTS gains;
-DROP TABLE IF EXISTS finances;
-DROP TABLE IF EXISTS login_requests;
-DROP TABLE IF EXISTS users;
-
-CREATE TABLE users (
+CREATE TABLE IF NOT EXISTS users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nom VARCHAR(100) NOT NULL,
     prenom VARCHAR(100) NOT NULL,
@@ -26,7 +18,7 @@ CREATE TABLE users (
     INDEX idx_role (role)
 ) ENGINE=InnoDB;
 
-CREATE TABLE login_requests (
+CREATE TABLE IF NOT EXISTS login_requests (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     email VARCHAR(255) NOT NULL,
@@ -40,7 +32,7 @@ CREATE TABLE login_requests (
     INDEX idx_expiration (date_expiration)
 ) ENGINE=InnoDB;
 
-CREATE TABLE finances (
+CREATE TABLE IF NOT EXISTS finances (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     type ENUM('gain', 'perte', 'solde') NOT NULL,
@@ -55,7 +47,7 @@ CREATE TABLE finances (
     INDEX idx_user_date (user_id, date_transaction)
 ) ENGINE=InnoDB;
 
-CREATE TABLE gains (
+CREATE TABLE IF NOT EXISTS gains (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     montant DECIMAL(15, 2) NOT NULL DEFAULT 0.00,
@@ -67,7 +59,7 @@ CREATE TABLE gains (
     INDEX idx_user_date (user_id, date_gain)
 ) ENGINE=InnoDB;
 
-CREATE TABLE pertes (
+CREATE TABLE IF NOT EXISTS pertes (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     montant DECIMAL(15, 2) NOT NULL DEFAULT 0.00,
@@ -79,7 +71,7 @@ CREATE TABLE pertes (
     INDEX idx_user_date (user_id, date_perte)
 ) ENGINE=InnoDB;
 
-CREATE TABLE soldes (
+CREATE TABLE IF NOT EXISTS soldes (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     solde_initial DECIMAL(15, 2) NOT NULL DEFAULT 0.00,
@@ -91,7 +83,7 @@ CREATE TABLE soldes (
     INDEX idx_user_date (user_id, date_mise_a_jour)
 ) ENGINE=InnoDB;
 
-CREATE TABLE admin_logs (
+CREATE TABLE IF NOT EXISTS admin_logs (
     id INT AUTO_INCREMENT PRIMARY KEY,
     admin_id INT NOT NULL,
     action VARCHAR(50) NOT NULL,
@@ -101,27 +93,3 @@ CREATE TABLE admin_logs (
     FOREIGN KEY (admin_id) REFERENCES users(id) ON DELETE CASCADE,
     INDEX idx_admin_date (admin_id, date_action)
 ) ENGINE=InnoDB;
-
-INSERT INTO users (nom, prenom, email, password, classe, role, is_verified, is_active) VALUES 
-('Admin', 'System', 'admin@fujirak.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'plus', 'admin', 1, 1);
-
-INSERT INTO users (nom, prenom, email, password, classe, role, is_verified, is_active) VALUES 
-('Dupont', 'Jean', 'jean.dupont@email.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'simple', 'user', 1, 1), 
-('Martin', 'Sophie', 'sophie.martin@email.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'gold', 'user', 1, 1),
-('Bernard', 'Pierre', 'pierre.bernard@email.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'plus', 'user', 1, 1);
-
-INSERT INTO soldes (user_id, solde_initial, solde_actuel, date_mise_a_jour) VALUES
-(2, 5000.00, 7500.00, '2024-01-15'),
-(3, 10000.00, 15000.00, '2024-01-15'),
-(4, 20000.00, 25000.00, '2024-01-15');
-
-INSERT INTO gains (user_id, montant, description, source, date_gain) VALUES
-(2, 1500.00, 'Commission janvier', 'Commission', '2024-01-15'),
-(2, 2000.00, 'Bonus performance', 'Bonus', '2024-02-01'),
-(3, 3000.00, 'Commission janvier', 'Commission', '2024-01-20'),
-(4, 5000.00, 'Bonus trimestriel', 'Bonus', '2024-01-25');
-
-INSERT INTO pertes (user_id, montant, description, categorie, date_perte) VALUES
-(2, 500.00, 'Frais administratifs', 'Frais', '2024-01-18'),
-(3, 800.00, 'Ajustement marché', 'Marché', '2024-01-22'),
-(4, 1200.00, 'Frais transaction', 'Frais', '2024-01-28');
