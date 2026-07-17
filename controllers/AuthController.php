@@ -70,7 +70,7 @@ if (isset($_POST['send_code'])) {
 }
 
 // =====================================================
-// VERIFICATION DU CODE
+// CODE CHECKING
 // =====================================================
 if (isset($_POST['verify_code'])) {
 

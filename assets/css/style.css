@@ -1,0 +1,15 @@
+
+.logocontainer{
+    width: 100%;
+    height: 30%;
+}
+.logo{
+    width: 100%;
+}
+.hidden{
+    width: 49%;
+    overflow: hidden;
+}
+.bi{
+    font-size: 40px;
+}
