@@ -6,6 +6,21 @@
   "settingsSignature": null,
   "pendingChangedFiles": [
     "/media/lucasa/Ventoy/projet php/asa/projet_FujiRak/models/User.php",
-    "/media/lucasa/Ventoy/projet php/asa/projet_FujiRak/test_user_model.php"
+    "/media/lucasa/Ventoy/projet php/asa/projet_FujiRak/test_user_model.php",
+    "/media/lucasa/Ventoy/projet php/asa/projet_FujiRak/assets/images/image1.png",
+    "/media/lucasa/Ventoy/projet php/asa/projet_FujiRak/assets/images/image4.jpeg",
+    "/media/lucasa/Ventoy/projet php/asa/projet_FujiRak/assets/css/dashboard.css",
+    "/media/lucasa/Ventoy/projet php/asa/projet_FujiRak/assets/css/style.css",
+    "/media/lucasa/Ventoy/projet php/asa/projet_FujiRak/assets/js/chart.js",
+    "/media/lucasa/Ventoy/projet php/asa/projet_FujiRak/controllers/AuthController.php",
+    "/media/lucasa/Ventoy/projet php/asa/projet_FujiRak/test_courbe.php",
+    "/media/lucasa/Ventoy/projet php/asa/projet_FujiRak/views/auth/login.php",
+    "/media/lucasa/Ventoy/projet php/asa/projet_FujiRak/assets/images/image1.jpeg",
+    "/media/lucasa/Ventoy/projet php/asa/projet_FujiRak/index.php",
+    "/media/lucasa/Ventoy/projet php/asa/projet_FujiRak/views/auth/login_temporaire.php",
+    "/media/lucasa/Ventoy/projet php/asa/projet_FujiRak/views/auth/verify.php",
+    "/media/lucasa/Ventoy/projet php/asa/projet_FujiRak/views/user/home_temporaire.php",
+    "/media/lucasa/Ventoy/projet php/asa/projet_FujiRak/views/auth/login_rad.php",
+    "/media/lucasa/Ventoy/projet php/asa/projet_FujiRak/views/user/home.php"
   ]
 }

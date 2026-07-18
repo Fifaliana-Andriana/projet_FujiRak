@@ -1,85 +1,74 @@
 <?php
-$images = [
-    '/assets/images/image2.jpeg',
-    '/assets/images/image3.jpeg',
-    '/assets/images/image4.jpeg'
-];
+
+
+
+
 ?>
 <!DOCTYPE html>
 <html lang="fr">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Connexion</title>
-    <link rel="stylesheet" href="assets/css/style.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Connexion - FujiRak Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .login-box {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            width: 400px;
+        }
+        h2 { text-align: center; color: #333; }
+        input[type="email"] {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover { background: #0056b3; }
+        .error { background: #ffe6e6; color: #cc0000; padding: 10px; border-radius: 5px; margin-bottom: 15px; }
+        .success { background: #e6ffe6; color: #008000; padding: 10px; border-radius: 5px; margin-bottom: 15px; }
+    </style>
 </head>
-
-<style>
-    body {
-        margin: 0;
-        padding: 0;
-    }
-</style>
-
 <body>
-    <div class="container mt-5 d-flex justify-content-evenly">
-        <div class="row justify-content-center rounded hidden bg-primary-subtle mx-auto">
-            <div class="d-flex justify-content-center logocontainer">
-                <img src="../assets/images/logo1.jpeg" class="logo w-75" alt="Logo">
-            </div>
-            <div class="w-100">
-
-                <form action="controllers/AuthController.php"
-                    class="d-flex justify-content-center align-items-center" method="POST">
-
-
-                    <div class="w-75 mb-3 d-flex justify-content-center align-items-center">
-                        <label class="w-25 form-label">E-mail:</label>
-                        <input type="email" name="email" class="form-control" placeholder="jeanpaul123@gmail.com"
-                            required>
-                        <button id="btntoverify" type="submit" name="send_code" class="btn">
-                            <i class="bi bi-arrow-right-square"></i>
-                        </button>
-                    </div>
-                </form>
-
-            </div>
-        </div>
-        <div class="slide rounded hidden">
-            <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
-
-                <div class="carousel-inner">
-                    <?php foreach ($images as $index => $image): ?>
-                        <div class="carousel-item <?= $index == 0 ? 'active' : '' ?>">
-                            <img src="<?= $image ?>" class="d-block w-100" alt="Image"
-                                style="height:400px; object-fit:cover;">
-                        </div>
-                    <?php endforeach; ?>
-                </div>
-
-                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample"
-                    data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon"></span>
-                </button>
-
-                <button class="carousel-control-next" type="button" data-bs-target="#carouselExample"
-                    data-bs-slide="next">
-                    <span class="carousel-control-next-icon"></span>
-                </button>
-            </div>
-        </div>
+    <div class="login-box">
+        <h2>🔐 Connexion</h2>
+        
+        <?php if (isset($_SESSION['error'])): ?>
+            <div class="error"><?php echo $_SESSION['error']; unset($_SESSION['error']); ?></div>
+        <?php endif; ?>
+        
+        <?php if (isset($_SESSION['success'])): ?>
+            <div class="success"><?php echo $_SESSION['success']; unset($_SESSION['success']); ?></div>
+        <?php endif; ?>
+        
+        <form action="index.php?route=send-code" method="POST">
+            <label for="email">Votre adresse email :</label>
+            <input type="email" id="email" name="email" placeholder="exemple@email.com" required>
+            <button type="submit" name="send_code">Envoyer le code</button>
+        </form>
     </div>
 </body>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-    const btntoverify = document.getElementById('btntoverify');
-    btntoverify.addEventListener('click', () => {
-        window.local.href = 'views/auth/verify.php'
-    })
-</script>
-
 </html>
