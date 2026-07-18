@@ -5,13 +5,7 @@
   "pluginSignature": null,
   "settingsSignature": null,
   "pendingChangedFiles": [
-    "/media/lucasa/Ventoy/projet php/asa/projet_FujiRak/.codegraphy",
-    "/media/lucasa/Ventoy/projet php/asa/projet_FujiRak/.gitignore",
-    "/media/lucasa/Ventoy/projet php/asa/projet_FujiRak/databases/schema.sql",
-    "/media/lucasa/Ventoy/projet php/asa/projet_FujiRak/databases/seed.sql",
-    "/media/lucasa/Ventoy/projet php/asa/projet_FujiRak/config/database.php",
-    "/media/lucasa/Ventoy/projet php/asa/projet_FujiRak/databases/schema_install.sql",
-    "/media/lucasa/Ventoy/projet php/asa/projet_FujiRak/databases/schema_update.sql",
-    "/media/lucasa/Ventoy/projet php/asa/projet_FujiRak/test_db.php"
+    "/media/lucasa/Ventoy/projet php/asa/projet_FujiRak/models/User.php",
+    "/media/lucasa/Ventoy/projet php/asa/projet_FujiRak/test_user_model.php"
   ]
 }
