@@ -15,7 +15,19 @@ switch ($route) {
     case 'login':
         $auth->showLoginForm();
         break;
-    
+
+    case 'login-submit':
+        $auth->login();
+        break;
+
+    case 'register':
+        $auth->showRegisterForm();
+        break;
+
+    case 'submit-register':
+        $auth->submitRegistrationRequest();
+        break;
+
     case 'send-code':
         $auth->sendCode();
         break;
@@ -43,7 +55,7 @@ switch ($route) {
             header('Location: index.php?route=user/home');
             exit();
         }
-        require 'views/admin/dashboard.php';
+        $auth->showAdminDashboard();
         break;
     
     case 'admin/users':
@@ -55,7 +67,19 @@ switch ($route) {
             header('Location: index.php?route=user/home');
             exit();
         }
-        require 'views/admin/users.php';
+        $auth->showAdminUsers();
+        break;
+
+    case 'admin/approve-request':
+        if (!isset($_SESSION['user_id'])) {
+            header('Location: index.php?route=login');
+            exit();
+        }
+        if ($_SESSION['user_role'] !== 'admin') {
+            header('Location: index.php?route=user/home');
+            exit();
+        }
+        $auth->approveRegistrationRequest();
         break;
 
     case 'admin/gains':

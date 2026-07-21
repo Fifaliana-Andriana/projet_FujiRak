@@ -5,6 +5,8 @@
   "pluginSignature": null,
   "settingsSignature": null,
   "pendingChangedFiles": [
-    "/media/lucasa/Ventoy/projet php/asa/projet_FujiRak/views/auth/login.php"
+    "/media/lucasa/Ventoy/projet php/asa/projet_FujiRak/databases/schema_update.sql",
+    "/media/lucasa/Ventoy/projet php/asa/projet_FujiRak/models/User.php",
+    "/media/lucasa/Ventoy/projet php/asa/projet_FujiRak/views/admin/users.php"
   ]
 }

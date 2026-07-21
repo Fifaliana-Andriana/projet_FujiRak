@@ -1,5 +1,6 @@
 CREATE TABLE IF NOT EXISTS users (
     id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(100) DEFAULT NULL UNIQUE,
     nom VARCHAR(100) NOT NULL,
     prenom VARCHAR(100) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
@@ -30,6 +31,22 @@ CREATE TABLE IF NOT EXISTS login_requests (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     INDEX idx_user_code (user_id, code),
     INDEX idx_expiration (date_expiration)
+) ENGINE=InnoDB;
+
+-- Table for registration requests submitted by prospective users (email only)
+CREATE TABLE IF NOT EXISTS registration_requests (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(255) NOT NULL,
+    ip_address VARCHAR(45) DEFAULT NULL,
+    is_processed TINYINT(1) NOT NULL DEFAULT 0,
+    processed_by INT DEFAULT NULL,
+    processed_at DATETIME DEFAULT NULL,
+    user_id INT DEFAULT NULL,
+    date_creation DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (processed_by) REFERENCES users(id) ON DELETE SET NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL,
+    INDEX idx_processed (is_processed),
+    INDEX idx_email (email)
 ) ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS finances (

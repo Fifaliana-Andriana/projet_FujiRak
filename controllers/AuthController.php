@@ -29,6 +29,191 @@ class AuthController {
         require_once __DIR__ . "/../views/auth/login.php";
     }
 
+    public function login() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header('Location: index.php?route=login');
+            exit();
+        }
+
+        $username = trim($_POST['username'] ?? '');
+        $password = $_POST['password'] ?? '';
+
+        if (empty($username) || empty($password)) {
+            $_SESSION['error'] = 'Veuillez saisir votre nom d\'utilisateur et votre mot de passe.';
+            header('Location: index.php?route=login');
+            exit();
+        }
+
+        $user = $this->userModel->findByUsername($username);
+        if (!$user) {
+            $_SESSION['error'] = 'Nom d\'utilisateur ou mot de passe invalide.';
+            header('Location: index.php?route=login');
+            exit();
+        }
+
+        if (!$user['is_active']) {
+            $_SESSION['error'] = 'Votre compte est désactivé. Contactez l\'administrateur.';
+            header('Location: index.php?route=login');
+            exit();
+        }
+
+        if (!password_verify($password, $user['password'])) {
+            $_SESSION['error'] = 'Nom d\'utilisateur ou mot de passe invalide.';
+            header('Location: index.php?route=login');
+            exit();
+        }
+
+        $_SESSION['user_id'] = $user['id'];
+        $_SESSION['user_nom'] = $user['nom'];
+        $_SESSION['user_prenom'] = $user['prenom'];
+        $_SESSION['user_email'] = $user['email'];
+        $_SESSION['user_username'] = $user['username'];
+        $_SESSION['user_classe'] = $user['classe'];
+        $_SESSION['user_role'] = $user['role'];
+
+        $stmt = $this->db->prepare("UPDATE users SET last_login = NOW() WHERE id = ?");
+        $stmt->execute([$user['id']]);
+
+        $_SESSION['success'] = 'Bienvenue ' . $user['prenom'] . ' !';
+
+        if ($user['role'] === 'admin') {
+            header('Location: index.php?route=admin/dashboard');
+        } else {
+            header('Location: index.php?route=home');
+        }
+        exit();
+    }
+
+    public function showRegisterForm() {
+        if (isset($_SESSION['user_id'])) {
+            header('Location: index.php?route=home');
+            exit();
+        }
+
+        require_once __DIR__ . '/../views/auth/register.php';
+    }
+
+    public function submitRegistrationRequest() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header('Location: index.php?route=register');
+            exit();
+        }
+
+        $email = trim(filter_var($_POST['email'], FILTER_SANITIZE_EMAIL));
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $_SESSION['error'] = 'Format email invalide';
+            header('Location: index.php?route=register');
+            exit();
+        }
+
+        $request = $this->userModel->createRegistrationRequest($email);
+        if (!$request['success']) {
+            $_SESSION['error'] = $request['message'];
+            header('Location: index.php?route=register');
+            exit();
+        }
+
+        $adminEmail = 'admin@fujirak.com';
+        $notificationBody = "<p>L'utilisateur <strong>{$email}</strong> souhaite s'inscrire.</p>";
+        $notificationBody .= '<p>Connectez-vous au tableau de bord administrateur pour créer son identifiant et son mot de passe.</p>';
+
+        try {
+            $this->sendEmail($adminEmail, 'Administrateur FujiRak', 'Nouvelle demande d\'inscription', $notificationBody);
+        } catch (Exception $e) {
+            // Ne pas bloquer l'utilisateur si la notification email échoue.
+        }
+
+        $_SESSION['success'] = 'Votre demande d\'inscription a bien été prise en compte. Vous serez contacté dès que votre compte sera créé.';
+        header('Location: index.php?route=login');
+        exit();
+    }
+
+    public function showAdminDashboard() {
+        $pendingRequests = $this->userModel->getPendingRegistrationRequests();
+        $pendingCount = count($pendingRequests);
+        require_once __DIR__ . '/../views/admin/dashboard.php';
+    }
+
+    public function showAdminUsers() {
+        $users = $this->userModel->getAllUsers();
+        $pendingRequests = $this->userModel->getPendingRegistrationRequests();
+        require_once __DIR__ . '/../views/admin/users.php';
+    }
+
+    public function approveRegistrationRequest() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header('Location: index.php?route=admin/users');
+            exit();
+        }
+
+        $requestId = intval($_POST['request_id'] ?? 0);
+        $username = trim($_POST['username'] ?? '');
+        $password = $_POST['password'] ?? '';
+        $passwordConfirm = $_POST['password_confirm'] ?? '';
+
+        if ($requestId <= 0 || empty($username) || empty($password) || empty($passwordConfirm)) {
+            $_SESSION['error'] = 'Tous les champs sont obligatoires pour créer le compte.';
+            header('Location: index.php?route=admin/users');
+            exit();
+        }
+
+        if ($password !== $passwordConfirm) {
+            $_SESSION['error'] = 'Les mots de passe ne correspondent pas.';
+            header('Location: index.php?route=admin/users');
+            exit();
+        }
+
+        $result = $this->userModel->approveRegistrationRequest($requestId, $username, $password, $_SESSION['user_id']);
+        if (!$result['success']) {
+            $_SESSION['error'] = $result['message'];
+            header('Location: index.php?route=admin/users');
+            exit();
+        }
+
+        $loginUrl = 'http://' . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . '/index.php?route=login';
+        $mailBody = "
+            <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;'>
+                <h2 style='color: #333;'>Bienvenue sur FujiRak</h2>
+                <p>Votre compte a été créé par l\'administrateur.</p>
+                <p><strong>Nom d\'utilisateur :</strong> {$username}</p>
+                <p><strong>Mot de passe :</strong> {$password}</p>
+                <p>Vous pouvez vous connecter en utilisant ces informations à l\'adresse suivante :</p>
+                <p><a href='{$loginUrl}'>Accéder au login FujiRak</a></p>
+                <p>Nous vous recommandons de changer votre mot de passe dès votre première connexion.</p>
+            </div>
+        ";
+
+        try {
+            $this->sendEmail($result['user_email'], $result['user_email'], 'Vos identifiants FujiRak', $mailBody);
+        } catch (Exception $e) {
+            $_SESSION['error'] = 'Le compte a été créé mais l\'email de notification n\'a pas pu être envoyé.';
+            header('Location: index.php?route=admin/users');
+            exit();
+        }
+
+        $_SESSION['success'] = 'Le compte a été créé et les identifiants ont été envoyés à l\'utilisateur.';
+        header('Location: index.php?route=admin/users');
+        exit();
+    }
+
+    private function sendEmail($to, $name, $subject, $body) {
+        $mail = new PHPMailer(true);
+        $mail->isSMTP();
+        $mail->Host = 'smtp.gmail.com';
+        $mail->SMTPAuth = true;
+        $mail->Username = 'finixiias_mada@gmail.com';
+        $mail->Password = 'Finixiias@123';
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->Port = 587;
+
+        $mail->setFrom('finixiias_mada@gmail.com', 'FujiRak Dashboard');
+        $mail->addAddress($to, $name);
+        $mail->isHTML(true);
+        $mail->Subject = $subject;
+        $mail->Body = $body;
+        $mail->send();
+    }
+
 
     public function sendCode() {
         if ($_SERVER['REQUEST_METHOD'] != 'POST') {

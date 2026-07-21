@@ -163,7 +163,7 @@
                 </div>
 
                 <h2 class="title">Connexion</h2>
-                <p class="subtitle">Connectez-vous pour accéder à votre dashboard</p>
+                <p class="subtitle">Connectez-vous avec votre nom d'utilisateur et votre mot de passe</p>
 
                 <?php if (isset($_SESSION['error'])): ?>
                     <div class="error">
@@ -180,16 +180,25 @@
                     </div>
                 <?php endif; ?>
 
-                <form action="index.php?route=send-code" method="POST">
+                <form action="index.php?route=login-submit" method="POST">
                     <div class="input-group-custom">
-                        <label for="email">Adresse email :</label>
-                        <input type="email" id="email" name="email" placeholder="jeanpaul123@gmail.com" required autocomplete="email">
+                        <label for="username">Nom d'utilisateur :</label>
+                        <input type="text" id="username" name="username" placeholder="votre.nom.utilisateur" required autocomplete="username">
                     </div>
 
-                    <button type="submit" name="send_code" class="btn btn-primary w-100 py-3" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; border-radius: 10px; font-size: 16px; font-weight: bold; transition: all 0.3s;">
-                        <i class="bi bi-envelope"></i> Recevoir le code de connexion
+                    <div class="input-group-custom">
+                        <label for="password">Mot de passe :</label>
+                        <input type="password" id="password" name="password" placeholder="••••••••" required autocomplete="current-password">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100 py-3" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; border-radius: 10px; font-size: 16px; font-weight: bold; transition: all 0.3s;">
+                        <i class="bi bi-box-arrow-in-right"></i> Se connecter
                     </button>
                 </form>
+
+                <div class="text-center mt-4">
+                    <p>Pas encore de compte ? <a href="index.php?route=register">S'inscrire</a></p>
+                </div>
             </div>
 
             <div class="col-md-6 carousel-side">

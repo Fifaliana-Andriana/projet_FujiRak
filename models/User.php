@@ -33,6 +33,14 @@ class User {
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+    public function findByUsername($username) {
+        $query = "SELECT * FROM " . $this->table . " WHERE username = :username LIMIT 1";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':username', $username);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
     public function findById($id) {
         $query = "SELECT * FROM " . $this->table . " WHERE id = :id LIMIT 1";
         $stmt = $this->conn->prepare($query);
@@ -138,6 +146,102 @@ class User {
         ];
     }
 
+    // Create a registration request (visitor provides email)
+    public function createRegistrationRequest($email) {
+        // If email already exists as a user, don't create a request
+        $existing = $this->findByEmail($email);
+        if ($existing) {
+            return [
+                'success' => false,
+                'message' => 'Un compte existe déjà pour cet email.'
+            ];
+        }
+
+        $ip = $_SERVER['REMOTE_ADDR'] ?? null;
+
+        $query = "INSERT INTO registration_requests (email, ip_address) VALUES (:email, :ip)";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':email', $email);
+        $stmt->bindParam(':ip', $ip);
+
+        if ($stmt->execute()) {
+            return [
+                'success' => true,
+                'message' => 'Demande enregistrée'
+            ];
+        }
+
+        return [
+            'success' => false,
+            'message' => 'Erreur lors de l\'enregistrement de la demande.'
+        ];
+    }
+
+    // Return pending registration requests
+    public function getPendingRegistrationRequests() {
+        $query = "SELECT id, email, ip_address, date_creation FROM registration_requests WHERE is_processed = 0 ORDER BY date_creation ASC";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    // Approve a registration request: create user and mark request processed
+    public function approveRegistrationRequest($requestId, $username, $password, $adminId = null) {
+        // Fetch request
+        $query = "SELECT * FROM registration_requests WHERE id = :id LIMIT 1";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':id', $requestId, PDO::PARAM_INT);
+        $stmt->execute();
+        $req = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$req) {
+            return [ 'success' => false, 'message' => 'Demande introuvable' ];
+        }
+        if ($req['is_processed']) {
+            return [ 'success' => false, 'message' => 'Demande déjà traitée' ];
+        }
+
+        // Ensure username unique
+        $existingUsername = $this->findByUsername($username);
+        if ($existingUsername) {
+            return [ 'success' => false, 'message' => 'Nom d\'utilisateur déjà utilisé' ];
+        }
+
+        // Prepare basic name from email if possible
+        $local = strstr($req['email'], '@', true);
+        $nom = $local ?: 'Utilisateur';
+        $prenom = '';
+
+        $data = [
+            'username' => $username,
+            'nom' => $nom,
+            'prenom' => $prenom,
+            'email' => $req['email'],
+            'password' => $password,
+            'classe' => 'simple',
+            'role' => 'user'
+        ];
+
+        // Create user
+        $created = $this->create($data);
+        if (!$created) {
+            return [ 'success' => false, 'message' => 'Impossible de créer l\'utilisateur' ];
+        }
+
+        // Get created user id
+        $userId = $this->conn->lastInsertId();
+
+        // Mark request processed
+        $update = "UPDATE registration_requests SET is_processed = 1, processed_by = :admin, processed_at = NOW(), user_id = :user WHERE id = :id";
+        $uStmt = $this->conn->prepare($update);
+        $uStmt->bindParam(':admin', $adminId);
+        $uStmt->bindParam(':user', $userId);
+        $uStmt->bindParam(':id', $requestId, PDO::PARAM_INT);
+        $uStmt->execute();
+
+        return [ 'success' => true, 'message' => 'Compte créé', 'user_id' => $userId, 'user_email' => $req['email'] ];
+    }
+
     public function getStatsByClass() {
         $query = "SELECT classe, COUNT(*) as total FROM " . $this->table . " WHERE is_active = 1 GROUP BY classe";
 
@@ -157,8 +261,8 @@ class User {
     }
 
     public function getAllUsers() {
-            $query = "SELECT id, nom, prenom, email, classe, role, is_verified, is_active, last_login, date_creation FROM " . $this->table . " ORDER BY date_creation DESC";
-        
+        $query = "SELECT id, username, nom, prenom, email, classe, role, is_verified, is_active, last_login, date_creation FROM " . $this->table . " ORDER BY date_creation DESC";
+
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
 
@@ -167,12 +271,13 @@ class User {
 
 
     public function create($data) {
-        $query = "INSERT INTO " . $this->table . " (nom, prenom, email, password, classe, role, is_verified, is_active) VALUES (:nom, :prenom, :email, :password, :classe, :role, 1, 1)";
+        $query = "INSERT INTO " . $this->table . " (username, nom, prenom, email, password, classe, role, is_verified, is_active) VALUES (:username, :nom, :prenom, :email, :password, :classe, :role, 1, 1)";
 
         $stmt = $this->conn->prepare($query);
 
         $password = password_hash($data['password'], PASSWORD_BCRYPT);
 
+        $stmt->bindParam(':username', $data['username']);
         $stmt->bindParam(':nom', $data['nom']);
         $stmt->bindParam(':prenom', $data['prenom']);
         $stmt->bindParam(':email', $data['email']);
