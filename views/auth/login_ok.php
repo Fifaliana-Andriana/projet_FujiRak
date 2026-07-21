@@ -164,7 +164,7 @@ $images = [
                     <img src="assets/images/logolight.png" class="logo" alt="FujiRak Logo">
                 </div>
 
-                <h2 class="title">Connexion</h2>
+                <h2 class="title" style="color: #04a59d">Connexion</h2>
                 <p class="subtitle">Connectez-vous avec votre e-mail et votre mot de passe</p>
 
                 <?php if (isset($_SESSION['error'])): ?>

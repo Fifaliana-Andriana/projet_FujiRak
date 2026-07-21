@@ -35,18 +35,24 @@ class AuthController {
             exit();
         }
 
-        $username = trim($_POST['username'] ?? '');
+        $email = trim($_POST['email'] ?? '');
         $password = $_POST['password'] ?? '';
 
-        if (empty($username) || empty($password)) {
-            $_SESSION['error'] = 'Veuillez saisir votre nom d\'utilisateur et votre mot de passe.';
+        if (empty($email) || empty($password)) {
+            $_SESSION['error'] = 'Veuillez saisir votre adresse e-mail.';
+            header('Location: index.php?route=login');
+            exit();
+        }
+        if (empty($password)){
+            $_SESSION['error'] = 'Veuillez entrer le mot de passe.';
             header('Location: index.php?route=login');
             exit();
         }
 
-        $user = $this->userModel->findByUsername($username);
+        // $user = $this->userModel->findByUsername($email);
+        $user = $this->userModel->findByEmail($_POST['email']);
         if (!$user) {
-            $_SESSION['error'] = 'Nom d\'utilisateur ou mot de passe invalide.';
+            $_SESSION['error'] = 'Adresse e-mail ou mot de passe invalide.';
             header('Location: index.php?route=login');
             exit();
         }
@@ -58,7 +64,7 @@ class AuthController {
         }
 
         if (!password_verify($password, $user['password'])) {
-            $_SESSION['error'] = 'Nom d\'utilisateur ou mot de passe invalide.';
+            $_SESSION['error'] = 'Adresse e-mail ou mot de passe invalide.';
             header('Location: index.php?route=login');
             exit();
         }
