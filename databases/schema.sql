@@ -4,18 +4,19 @@ DROP TABLE IF EXISTS pertes;
 DROP TABLE IF EXISTS gains;
 DROP TABLE IF EXISTS finances;
 DROP TABLE IF EXISTS login_requests;
+DROP TABLE IF EXISTS registration_requests;
 DROP TABLE IF EXISTS users;
 
 CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(100) NOT NULL UNIQUE,
     nom VARCHAR(100) NOT NULL,
     prenom VARCHAR(100) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) DEFAULT NULL,
+    avatar VARCHAR(255) DEFAULT NULL,
     classe ENUM('simple', 'gold', 'plus') NOT NULL DEFAULT 'simple',
     role ENUM('user', 'admin') NOT NULL DEFAULT 'user',
-    verification_code VARCHAR(6) DEFAULT NULL,
-    code_expiration DATETIME DEFAULT NULL,
     is_verified TINYINT(1) NOT NULL DEFAULT 0,
     is_active TINYINT(1) NOT NULL DEFAULT 1,
     last_login DATETIME DEFAULT NULL,
@@ -24,6 +25,20 @@ CREATE TABLE users (
     INDEX idx_email (email),
     INDEX idx_classe (classe),
     INDEX idx_role (role)
+) ENGINE=InnoDB;
+
+CREATE TABLE registration_requests (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(255) NOT NULL,
+    ip_address VARCHAR(45) DEFAULT NULL,
+    is_processed TINYINT(1) NOT NULL DEFAULT 0,
+    processed_by INT DEFAULT NULL,
+    processed_at DATETIME DEFAULT NULL,
+    user_id INT DEFAULT NULL,
+    date_creation DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_email (email),
+    FOREIGN KEY (processed_by) REFERENCES users(id) ON DELETE SET NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
 ) ENGINE=InnoDB;
 
 CREATE TABLE login_requests (
@@ -38,21 +53,6 @@ CREATE TABLE login_requests (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     INDEX idx_user_code (user_id, code),
     INDEX idx_expiration (date_expiration)
-) ENGINE=InnoDB;
-
-CREATE TABLE finances (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
-    type ENUM('gain', 'perte', 'solde') NOT NULL,
-    montant DECIMAL(15, 2) NOT NULL DEFAULT 0.00,
-    description TEXT DEFAULT NULL,
-    date_transaction DATE NOT NULL,
-    date_creation DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    date_modification DATETIME DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-    INDEX idx_user_type (user_id, type),
-    INDEX idx_date (date_transaction),
-    INDEX idx_user_date (user_id, date_transaction)
 ) ENGINE=InnoDB;
 
 CREATE TABLE gains (
@@ -102,13 +102,11 @@ CREATE TABLE admin_logs (
     INDEX idx_admin_date (admin_id, date_action)
 ) ENGINE=InnoDB;
 
-INSERT INTO users (nom, prenom, email, password, classe, role, is_verified, is_active) VALUES 
-('Admin', 'System', 'admin@fujirak.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'plus', 'admin', 1, 1);
-
-INSERT INTO users (nom, prenom, email, password, classe, role, is_verified, is_active) VALUES 
-('Dupont', 'Jean', 'jean.dupont@email.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'simple', 'user', 1, 1), 
-('Martin', 'Sophie', 'sophie.martin@email.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'gold', 'user', 1, 1),
-('Bernard', 'Pierre', 'pierre.bernard@email.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'plus', 'user', 1, 1);
+INSERT INTO users (username, nom, prenom, email, password, classe, role, is_verified, is_active) VALUES
+('admin', 'Admin', 'System', 'admin@fujirak.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'plus', 'admin', 1, 1),
+('jean.dupont', 'Dupont', 'Jean', 'jean.dupont@email.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'simple', 'user', 1, 1),
+('sophie.martin', 'Martin', 'Sophie', 'sophie.martin@email.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'gold', 'user', 1, 1),
+('pierre.bernard', 'Bernard', 'Pierre', 'pierre.bernard@email.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'plus', 'user', 1, 1);
 
 INSERT INTO soldes (user_id, solde_initial, solde_actuel, date_mise_a_jour) VALUES
 (2, 5000.00, 7500.00, '2024-01-15'),

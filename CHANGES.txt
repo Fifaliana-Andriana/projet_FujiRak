@@ -1,0 +1,51 @@
+Modifications apportées au projet PHP/MySQL pour respecter le cahier des charges :
+
+1) Authentification et gestion des comptes
+- Passage à la connexion par email et mot de passe.
+- Ajout d'un formulaire de demande de création de compte par email.
+- Ajout d'une interface admin pour créer un compte utilisateur après réception de la demande.
+- Envoi d'un email de validation avec le username et le mot de passe au demandeur lorsque l'admin crée le compte.
+- Ajout d'une édition de mot de passe par l'utilisateur depuis son profil.
+
+2) Interface administrateur
+- Ajout d'un tableau de bord admin affichant les totaux de gains, pertes et soldes.
+- Ajout d'un graphique de statistiques de création d'utilisateurs par jour/mois/année.
+- Ajout d'un affichage du nombre total d'utilisateurs et de leur répartition par classe (simple, gold, plus).
+- Ajout d'une page admin pour lister les utilisateurs.
+- Ajout de la création manuelle d'utilisateurs depuis l'interface admin.
+- Ajout de l'ajout de gains et pertes depuis le profil administrateur.
+
+3) Interface utilisateur
+- Ajout d'un tableau de bord utilisateur affichant gains, pertes, solde et graphique comparatif.
+- Ajout d'un filtre dans le tableau de bord utilisateur par jour/mois/année.
+- Ajout de l'édition du profil utilisateur et de l'ajout de photo de profil.
+- Ajout d'une page de l'historique des transactions (gains/pertes).
+- Ajout de la déconnexion.
+
+4) Modèle et base de données
+- Mise à jour du modèle User pour gérer la création, l'activation, les statuts et les profils.
+- Ajout du modèle Finance pour les totaux et l'historique des transactions.
+- Mise à jour du schéma de base de données pour inclure les tables users, registration_requests, gains, pertes.
+
+Fichiers modifiés ou ajoutés :
+- index.php
+- controllers/AuthController.php
+- controllers/DashboardController.php
+- controllers/UserController.php
+- models/User.php
+- models/Finance.php
+- views/auth/login.php
+- views/auth/register.php
+- views/admin/dashboard.php
+- views/admin/users.php
+- views/user/home.php
+- views/user/profile.php
+- views/user/history.php
+- CHANGES.txt
+
+Détails des actions :
+- Le routeur central index.php a été converti pour dispatcher les pages admin et utilisateur.
+- L'authentification a été centralisée et les pages de login/inscription sont adaptées au flux email/admin.
+- L'admin peut maintenant créer des comptes et ajouter des transactions.
+- Les utilisateurs peuvent visualiser leurs données financières et le solde, ainsi que charger une photo de profil.
+- Des graphiques Chart.js ont été ajoutés pour l'affichage des tendances et comparaisons.
