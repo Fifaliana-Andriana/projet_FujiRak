@@ -1,22 +1,22 @@
 <?php
+// views/auth/login.php
 ?>
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Connexion - FujiRak Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-incons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <style>
         body {
             margin: 0;
             padding: 0;
-            background: linear-gradient(135deg, #lala2e 0%, #16213e 50%, #0f3460 100%);
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
             min-height: 100vh;
             display: flex;
-            align-itmes: center;
+            align-items: center;
             justify-content: center;
         }
         .login-card {
@@ -36,7 +36,7 @@
             color: #333;
             margin-bottom: 5px;
         }
-        .subtile {
+        .subtitle {
             text-align: center;
             color: #888;
             margin-bottom: 30px;
@@ -94,7 +94,7 @@
         <?php if (isset($_SESSION['error'])): ?>
             <div class="error">
                 <i class="bi bi-exclamation-triangle"></i>
-                <?php echo $_SESSION['error']; uset($_SESSION['error']); ?>
+                <?php echo $_SESSION['error']; unset($_SESSION['error']); ?>
             </div>
         <?php endif; ?>
 
@@ -105,17 +105,18 @@
             </div>
         <?php endif; ?>
 
-
         <form action="index.php?route=login" method="POST">
             <div class="mb-3">
                 <label class="form-label fw-bold">Email</label>
-                <input type="email" name="email" class="form-control" placeholder="votre@email.com" required autocomplete="email">
+                <input type="email" name="email" class="form-control" 
+                       placeholder="votre@email.com" required autocomplete="email">
             </div>
             <div class="mb-4">
                 <label class="form-label fw-bold">Mot de passe</label>
-                <input type="password" name="password" class="form-control" placeholder="••••••••" required>
+                <input type="password" name="password" class="form-control" 
+                       placeholder="••••••••" required>
             </div>
-            <button class="btn-login" type="submit">
+            <button type="submit" class="btn-login">
                 <i class="bi bi-box-arrow-in-right"></i> Se connecter
             </button>
         </form>
