@@ -1,243 +1,184 @@
 <?php
-$chartLabels = json_encode($trend['labels']);
-$chartGains = json_encode($trend['gains']);
-$chartPertes = json_encode($trend['pertes']);
-$totalGain = number_format($totals['gains'], 2, ',', ' ');
-$totalPerte = number_format($totals['pertes'], 2, ',', ' ');
-$balance = number_format($totals['balance'], 2, ',', ' ');
-$class = $_SESSION['user_classe'];
-$username = htmlspecialchars($_SESSION['user_username']);
-$fullname = htmlspecialchars(trim($_SESSION['user_prenom'] . ' ' . $_SESSION['user_nom']));
+// views/user/home.php
+require_once __DIR__ . '/../../models/Finance.php';
+
+$financeModel = new Finance();
+$totals = $financeModel->getUserTotals($_SESSION['user_id']);
+$history = $financeModel->getUserTransactionHistory($_SESSION['user_id'], 5);
 ?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard utilisateur - FujiRak</title>
+    <title>Dashboard - FujiRak</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <style>
-        .classe-simple {background: silver; color: #222;}
-        .classe-gold {background: gold; color: #222;}
-        .classe-plus {background: #d4af37; color: #222;}
+        body { background: #f0f2f5; font-family: Arial, sans-serif; margin: 0; padding: 20px; }
+        .container { max-width: 1000px; margin: 0 auto; }
+        .header { 
+            background: white; border-radius: 15px; padding: 20px 30px; 
+            margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .welcome { font-size: 18px; color: #333; }
+        .welcome strong { font-size: 22px; }
+        .class-badge {
+            display: inline-block; padding: 8px 20px; border-radius: 20px;
+            font-weight: bold; font-size: 14px;
+        }
+        .class-simple { background: #C0C0C0; color: #333; }
+        .class-gold { background: #FFD700; color: #333; }
+        .class-plus { background: #FFD700; color: #333; position: relative; }
+        .class-plus::after {
+            content: '+'; position: absolute; top: -5px; right: -5px;
+            background: #FF4500; color: white; width: 18px; height: 18px;
+            border-radius: 50%; font-size: 12px;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 20px; }
+        .stat-card {
+            background: white; border-radius: 15px; padding: 25px; text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+        .stat-card .icon { font-size: 35px; margin-bottom: 10px; }
+        .stat-card .value { font-size: 24px; font-weight: bold; }
+        .stat-card .label { color: #888; font-size: 13px; margin-top: 5px; }
+        .stat-card.gains { border-bottom: 4px solid #28a745; }
+        .stat-card.pertes { border-bottom: 4px solid #dc3545; }
+        .stat-card.solde { border-bottom: 4px solid #007bff; }
+        .section {
+            background: white; border-radius: 15px; padding: 25px;
+            margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+        .section h5 { margin-bottom: 20px; color: #333; }
+        .logout-btn {
+            background: #dc3545; color: white; border: none;
+            padding: 10px 20px; border-radius: 10px; text-decoration: none;
+            transition: all 0.3s;
+        }
+        .logout-btn:hover { background: #bb2d3b; color: white; }
+        table { width: 100%; }
+        th { background: #f8f9fa; padding: 10px; font-size: 13px; }
+        td { padding: 10px; font-size: 14px; border-bottom: 1px solid #eee; }
+        .badge-gain { background: #d4edda; color: #155724; padding: 4px 10px; border-radius: 10px; font-size: 12px; }
+        .badge-perte { background: #f8d7da; color: #721c24; padding: 4px 10px; border-radius: 10px; font-size: 12px; }
+        .text-gain { color: #28a745; font-weight: bold; }
+        .text-perte { color: #dc3545; font-weight: bold; }
     </style>
 </head>
-<body class="bg-light">
-    <div class="container py-4">
-        <div class="d-flex flex-column flex-md-row justify-content-between align-items-start mb-4 gap-3">
-            <div>
-                <h1>Bonjour <?php echo $fullname ?: $username; ?></h1>
-                <p class="text-muted">Votre tableau de bord personnel de gestion des gains et pertes.</p>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="welcome">
+                👋 Bonjour <strong><?php echo htmlspecialchars($_SESSION['user_email']); ?></strong><br>
+                <small class="text-muted">Votre tableau de bord personnel</small>
             </div>
-            <div class="text-end">
-                <span class="badge px-3 py-2 classe-<?php echo htmlspecialchars($class); ?>">Classe : <?php echo ucfirst($class); ?></span>
-                <div class="mt-2">
-                    <a href="index.php?route=user/profile" class="btn btn-outline-primary btn-sm">Profil</a>
-                    <a href="index.php?route=user/history" class="btn btn-outline-secondary btn-sm">Historique</a>
-                    <a href="index.php?route=logout" class="btn btn-danger btn-sm">Déconnexion</a>
-                </div>
-            </div>
-        </div>
-
-        <?php if (isset($_SESSION['error'])): ?>
-            <div class="alert alert-danger"><?php echo $_SESSION['error']; unset($_SESSION['error']); ?></div>
-        <?php endif; ?>
-        <?php if (isset($_SESSION['success'])): ?>
-            <div class="alert alert-success"><?php echo $_SESSION['success']; unset($_SESSION['success']); ?></div>
-        <?php endif; ?>
-
-        <div class="row g-3 mb-4">
-            <div class="col-md-4">
-                <div class="card shadow-sm p-4 h-100">
-                    <h5>Gains</h5>
-                    <p class="display-6 text-success mb-0"><?php echo $totalGain; ?> Ar</p>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card shadow-sm p-4 h-100">
-                    <h5>Pertes</h5>
-                    <p class="display-6 text-danger mb-0"><?php echo $totalPerte; ?> Ar</p>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card shadow-sm p-4 h-100">
-                    <h5>Solde</h5>
-                    <p class="display-6 <?php echo $totals['balance'] >= 0 ? 'text-success' : 'text-danger'; ?> mb-0"><?php echo $balance; ?> Ar</p>
-                </div>
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <span class="class-badge class-<?php echo $_SESSION['user_classe']; ?>">
+                    <?php echo strtoupper($_SESSION['user_classe']); ?>
+                </span>
+                <a href="index.php?route=user/profile" class="btn btn-outline-primary btn-sm">
+                    <i class="bi bi-person"></i> Profil
+                </a>
+                <a href="index.php?route=logout" class="logout-btn">
+                    <i class="bi bi-box-arrow-right"></i> Déconnexion
+                </a>
             </div>
         </div>
 
-        <div class="card shadow-sm p-4 mb-4">
-            <div class="d-flex flex-column flex-md-row justify-content-between align-items-start gap-3 mb-3">
-                <div>
-                    <h2>Comparaison des gains et pertes</h2>
-                    <p class="text-muted mb-0">Affichage par <?php echo ucfirst($trend['period']); ?>.</p>
-                </div>
-                <div class="d-flex flex-column flex-md-row gap-2">
-                    <div>
-                        <a href="index.php?route=user/home&period=day" class="btn btn-outline-secondary btn-sm<?php echo $trend['period'] === 'day' ? ' active' : ''; ?>">Jour</a>
-                        <a href="index.php?route=user/home&period=month" class="btn btn-outline-secondary btn-sm<?php echo $trend['period'] === 'month' ? ' active' : ''; ?>">Mois</a>
-                        <a href="index.php?route=user/home&period=year" class="btn btn-outline-secondary btn-sm<?php echo $trend['period'] === 'year' ? ' active' : ''; ?>">Année</a>
-                    </div>
-                    <div>
-                        <button type="button" class="btn btn-outline-secondary btn-sm" data-chart-type="line">Courbe</button>
-                        <button type="button" class="btn btn-outline-secondary btn-sm" data-chart-type="bar">Barres</button>
-                        <button type="button" class="btn btn-outline-secondary btn-sm" data-chart-type="pie">Circulaire</button>
-                    </div>
-                </div>
+        <!-- Stats -->
+        <div class="stats">
+            <div class="stat-card gains">
+                <div class="icon">📈</div>
+                <div class="value"><?php echo number_format($totals['gains'], 2, ',', ' '); ?> Ar</div>
+                <div class="label">Total Gains</div>
             </div>
-            <canvas id="financeChart" height="180"></canvas>
-        </div>
-
-        <div class="row g-4">
-            <div class="col-lg-6">
-                <div class="card shadow-sm p-4">
-                    <h3>Ajouter un gain</h3>
-                    <form action="index.php?route=user/add-gain" method="POST">
-                        <div class="mb-3">
-                            <label class="form-label">Montant</label>
-                            <input type="number" step="0.01" name="amount" class="form-control" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Description</label>
-                            <input type="text" name="description" class="form-control">
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Source</label>
-                            <input type="text" name="source" class="form-control" placeholder="Commission, Salaire...">
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Date</label>
-                            <input type="date" name="date" class="form-control" value="<?php echo date('Y-m-d'); ?>">
-                        </div>
-                        <button class="btn btn-success">Ajouter le gain</button>
-                    </form>
-                </div>
+            <div class="stat-card pertes">
+                <div class="icon">📉</div>
+                <div class="value"><?php echo number_format($totals['pertes'], 2, ',', ' '); ?> Ar</div>
+                <div class="label">Total Pertes</div>
             </div>
-            <div class="col-lg-6">
-                <div class="card shadow-sm p-4">
-                    <h3>Ajouter une perte</h3>
-                    <form action="index.php?route=user/add-perte" method="POST">
-                        <div class="mb-3">
-                            <label class="form-label">Montant</label>
-                            <input type="number" step="0.01" name="amount" class="form-control" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Description</label>
-                            <input type="text" name="description" class="form-control">
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Catégorie</label>
-                            <input type="text" name="categorie" class="form-control" placeholder="Frais, Achat...">
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Date</label>
-                            <input type="date" name="date" class="form-control" value="<?php echo date('Y-m-d'); ?>">
-                        </div>
-                        <button class="btn btn-danger">Ajouter la perte</button>
-                    </form>
-                </div>
+            <div class="stat-card solde">
+                <div class="icon">💰</div>
+                <div class="value"><?php echo number_format($totals['solde_actuel'], 2, ',', ' '); ?> Ar</div>
+                <div class="label">Solde Actuel</div>
             </div>
         </div>
 
-        <div class="card shadow-sm p-4">
-            <h3>Dernières transactions</h3>
-            <div class="table-responsive">
-                <table class="table table-striped align-middle mb-0">
-                    <thead>
-                        <tr>
-                            <th>Date</th>
-                            <th>Type</th>
-                            <th>Montant</th>
-                            <th>Description</th>
-                            <th>Catégorie / Source</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php if (empty($transactions)): ?>
-                            <tr><td colspan="5" class="text-center text-muted">Aucune transaction récente.</td></tr>
-                        <?php else: ?>
-                            <?php foreach ($transactions as $item): ?>
-                                <tr>
-                                    <td><?php echo htmlspecialchars($item['date_transaction']); ?></td>
-                                    <td><?php echo $item['type'] === 'gain' ? '<span class="badge bg-success">Gain</span>' : '<span class="badge bg-danger">Perte</span>'; ?></td>
-                                    <td><?php echo number_format($item['montant'], 2, ',', ' '); ?> Ar</td>
-                                    <td><?php echo htmlspecialchars($item['description']); ?></td>
-                                    <td><?php echo htmlspecialchars($item['category']); ?></td>
-                                </tr>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
-                    </tbody>
-                </table>
-            </div>
+        <!-- Graphique -->
+        <div class="section">
+            <h5>📊 Comparaison Gains / Pertes</h5>
+            <canvas id="userChart" height="250"></canvas>
+        </div>
+
+        <!-- Dernières transactions -->
+        <div class="section">
+            <h5>📋 Dernières transactions</h5>
+            <?php if (!empty($history)): ?>
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Type</th>
+                        <th>Montant</th>
+                        <th>Description</th>
+                        <th>Catégorie</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($history as $row): ?>
+                    <tr>
+                        <td><?php echo date('d/m/Y', strtotime($row['date_transaction'])); ?></td>
+                        <td>
+                            <span class="<?php echo $row['type'] === 'gain' ? 'badge-gain' : 'badge-perte'; ?>">
+                                <?php echo $row['type'] === 'gain' ? '✅ Gain' : '❌ Perte'; ?>
+                            </span>
+                        </td>
+                        <td class="<?php echo $row['type'] === 'gain' ? 'text-gain' : 'text-perte'; ?>">
+                            <?php echo number_format($row['montant'], 2, ',', ' '); ?> Ar
+                        </td>
+                        <td><?php echo htmlspecialchars($row['description']); ?></td>
+                        <td><?php echo htmlspecialchars($row['category']); ?></td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+            <?php else: ?>
+                <p class="text-muted">Aucune transaction récente.</p>
+            <?php endif; ?>
+            <a href="index.php?route=user/history" class="btn btn-outline-secondary btn-sm mt-2">
+                Voir tout l'historique →
+            </a>
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <script>
-        const ctx = document.getElementById('financeChart').getContext('2d');
-        let chartType = 'line';
-        const chartData = {
-            labels: <?php echo $chartLabels; ?>,
-            datasets: [
-                {
-                    label: 'Gains',
-                    data: <?php echo $chartGains; ?>,
-                    borderColor: '#198754',
-                    backgroundColor: 'rgba(25, 135, 84, 0.25)',
-                    fill: true,
-                    tension: 0.35
-                },
-                {
-                    label: 'Pertes',
-                    data: <?php echo $chartPertes; ?>,
-                    borderColor: '#dc3545',
-                    backgroundColor: 'rgba(220, 53, 69, 0.25)',
-                    fill: true,
-                    tension: 0.35
-                }
-            ]
-        };
-        let financeChart = new Chart(ctx, {
-            type: chartType,
-            data: chartData,
+        const ctx = document.getElementById('userChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Gains', 'Pertes'],
+                datasets: [{
+                    data: [<?php echo $totals['gains']; ?>, <?php echo $totals['pertes']; ?>],
+                    backgroundColor: ['rgba(40, 167, 69, 0.7)', 'rgba(220, 53, 69, 0.7)'],
+                    borderWidth: 2,
+                    borderRadius: 10
+                }]
+            },
             options: {
                 responsive: true,
+                plugins: { legend: { display: false } },
                 scales: {
-                    y: {beginAtZero: true}
+                    y: {
+                        beginAtZero: true,
+                        ticks: { callback: v => v.toLocaleString('fr-FR') + ' Ar' }
+                    }
                 }
             }
-        });
-
-        document.querySelectorAll('[data-chart-type]').forEach(button => {
-            button.addEventListener('click', () => {
-                const type = button.getAttribute('data-chart-type');
-                if (type === 'pie') {
-                    financeChart.destroy();
-                    financeChart = new Chart(ctx, {
-                        type: 'pie',
-                        data: {
-                            labels: ['Gains', 'Pertes'],
-                            datasets: [{
-                                data: [<?php echo array_sum($trend['gains']); ?>, <?php echo array_sum($trend['pertes']); ?>],
-                                backgroundColor: ['#198754', '#dc3545']
-                            }]
-                        }
-                    });
-                    return;
-                }
-                financeChart.destroy();
-                financeChart = new Chart(ctx, {
-                    type: type,
-                    data: chartData,
-                    options: {
-                        responsive: true,
-                        scales: {
-                            y: {beginAtZero: true}
-                        }
-                    }
-                });
-            });
         });
     </script>
 </body>

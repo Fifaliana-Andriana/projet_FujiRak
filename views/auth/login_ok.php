@@ -1,12 +1,4 @@
 <?php
-<<<<<<< HEAD:views/auth/login.php
-=======
-$images = [
-    '/assets/images/image2.jpg',
-    '/assets/images/image3.jpg',
-    '/assets/images/image4.jpg'
-];
->>>>>>> 4335f0f059ecbd2058ddbedf0251660817d376e5:views/auth/login_ok.php
 ?>
 
 <!DOCTYPE html>
@@ -35,29 +27,6 @@ $images = [
             width: 420px;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
         }
-<<<<<<< HEAD:views/auth/login.php
-=======
-
-        .login-form-side {
-            padding: 40px;
-            background: white;
-        }
-
-        .carousel-side {
-            padding: 0;
-            background: #f8f9fa;
-        }
-
-        .carousel-inner img {
-            height: 500px;
-            object-fit: cover;
-        }
-
-        .logocontainer {
-            height: auto;
-        }
-
->>>>>>> 4335f0f059ecbd2058ddbedf0251660817d376e5:views/auth/login_ok.php
         .logo {
             text-align: center;
             font-size: 50px;
@@ -115,39 +84,10 @@ $images = [
             margin-bottom: 20px;
             font-size: 14px;
         }
-<<<<<<< HEAD:views/auth/login.php
-=======
-
-        .title {
-            font-size: 28px;
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 10px;
-            text-align: center;
-        }
-
-        .subtitle {
-            color: #888;
-            text-align: center;
-            margin-bottom: 30px;
-            font-size: 14px;
-        }
-
-        @media (max-width: 768px) {
-            .carousel-side {
-                display: none;
-            }
-
-            .login-form-side {
-                padding: 30px 20px;
-            }
-        }
->>>>>>> 4335f0f059ecbd2058ddbedf0251660817d376e5:views/auth/login_ok.php
     </style>
 </head>
 
 <body>
-<<<<<<< HEAD:views/auth/login.php
     <div class="login-card">
         <div class="logo">🔐</div>
         <h2>FujiRak Dashboard</h2>
@@ -157,94 +97,13 @@ $images = [
             <div class="error">
                 <i class="bi bi-exclamation-triangle"></i>
                 <?php echo $_SESSION['error']; uset($_SESSION['error']); ?>
-=======
-    <div class="container">
-        <div class="row login-container mx-auto" style="max-width: 1000px; height: 100vh">
-            <div class="col-md-6 login-form-side">
-                <div class="logocontainer d-flex align-items-start">
-                    <img src="assets/images/logolight.png" class="logo" alt="FujiRak Logo">
-                </div>
-
-                <h2 class="title" style="color: #04a59d">Connexion</h2>
-                <p class="subtitle">Connectez-vous avec votre e-mail et votre mot de passe</p>
-
-                <?php if (isset($_SESSION['error'])): ?>
-                    <div class="error">
-                        <i class="bi bi-exclamation-triangle"></i>
-                        <?php echo $_SESSION['error'];
-                        unset($_SESSION['error']); ?>
-                    </div>
-
-                <?php endif; ?>
-
-                <?php if (isset($_SESSION['success'])): ?>
-                    <div class="success">
-                        <i class="bi bi-check-circle"></i>
-                        <?php echo $_SESSION['success'];
-                        unset($_SESSION['success']); ?>
-                    </div>
-                <?php endif; ?>
-
-                <form action="index.php?route=login-submit" method="POST">
-                    <div class="input-group-custom">
-                        <label for="username">E-mail :</label>
-                        <input type="text" id="email" name="email" placeholder="votreemail@gmail.com" required
-                            autocomplete="email">
-                    </div>
-
-                    <div class="input-group-custom">
-                        <label for="password">Mot de passe :</label>
-                        <input type="password" id="password" name="password" placeholder="••••••••" required
-                            autocomplete="current-password">
-                    </div>
-                    <div class="w-100 d-flex justify-content-center align-items-center">
-                        <button type="submit"
-                            class="btn btn-primary w-75 py-3 d-flex justify-content-center align-items-center"
-                            style="background: #04a59d; height: 50px; border: none; border-radius: 10px; font-size: 16px; font-weight: bold; transition: all 0.3s;">
-                            <i class="bi bi-box-arrow-in-right" style="width: 20%"></i> Se connecter
-                        </button>
-                    </div>
-                </form>
->>>>>>> 4335f0f059ecbd2058ddbedf0251660817d376e5:views/auth/login_ok.php
             </div>
         <?php endif; ?>
 
-<<<<<<< HEAD:views/auth/login.php
         <?php if (isset($_SESSION['success'])): ?>
             <div class="success">
                 <i class="bi bi-check-circle"></i>
                 <?php echo $_SESSION['success']; unset($_SESSION['success']); ?>
-=======
-            <div class="col-md-6 carousel-side" style="height:100vh">
-                <div id="carouselLogin" class="carousel slide" data-bs-ride="carousel">
-                    <div class="carousel-inner">
-                        <?php foreach ($images as $index => $image): ?>
-                            <div class="carousel-item <?= $index == 0 ? 'active' : '' ?>">
-                                <img src="<?= $image ?>" class="d-block w-100" alt="Image"
-                                    style="height:100vh; object-fit:cover;">
-                            </div>
-                        <?php endforeach; ?>
-                    </div>
-
-                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselLogin"
-                        data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Précédent</span>
-                    </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#carouselLogin"
-                        data-bs-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Suivant</span>
-                    </button>
-
-                    <div class="carousel-indicators">
-                        <button type="button" data-bs-target="#carouselLogin" data-bs-slide-to="0"
-                            class="active"></button>
-                        <button type="button" data-bs-target="#carouselLogin" data-bs-slide-to="1"></button>
-                        <button type="button" data-bs-target="#carouselLogin" data-bs-slide-to="2"></button>
-                    </div>
-                </div>
->>>>>>> 4335f0f059ecbd2058ddbedf0251660817d376e5:views/auth/login_ok.php
             </div>
         <?php endif; ?>
 

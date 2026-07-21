@@ -33,7 +33,6 @@ class User {
         }
 
         if (password_verify($password, $user['password'])) {
-            // Mettre à jour last_login
             $query = "UPDATE " . $this->table . " SET last_login = NOW() WHERE id = :id";
             $stmt = $this->conn->prepare($query);
             $stmt->bindParam(':id', $user['id'], PDO::PARAM_INT);
@@ -73,6 +72,20 @@ class User {
     public function getAll() {
         $query = "SELECT id, email, classe, role, is_active, photo, last_login, date_creation 
                   FROM " . $this->table . " ORDER BY date_creation DESC";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getTotalUsers() {
+        $query = "SELECT COUNT(*) as total FROM " . $this->table . " WHERE is_active = 1";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC)['total'];
+    }
+
+    public function getStatsByClass() {
+        $query = "SELECT classe, COUNT(*) as total FROM " . $this->table . " WHERE is_active = 1 GROUP BY classe";
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
