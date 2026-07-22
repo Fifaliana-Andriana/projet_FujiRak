@@ -202,7 +202,7 @@ $images = [
                     <div class="carousel-inner">
                         <?php foreach ($images as $index => $image): ?>
                             <div class="carousel-item <?= $index === 0 ? 'active' : '' ?>">
-                                <img src="<?= $image ?>" class="d-block w-100 carousel-img" alt="Illustration FujiRak" style="height: 100vh">
+                                <img src="<?= $image ?>" class="d-block w-100 carousel-img" alt="Illustration FujiRak">
                             </div>
                         <?php endforeach; ?>
                     </div>
