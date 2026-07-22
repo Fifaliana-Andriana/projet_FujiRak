@@ -184,10 +184,10 @@ $images = [
                     </button>
                 </form>
 
-                <div class="text-center mt-3">
+                <!-- <div class="text-center mt-3">
                     <span class="text-muted small">Vous n'avez pas de compte ?</span>
                     <a href="index.php?route=signup" class="small link-teal ms-1">Créer un compte</a>
-                </div>
+                </div> -->
             </div>
 
             <!-- Section Carrousel -->

@@ -299,34 +299,16 @@ if (!isset($users)) {
         }
     </style>
 </head>
-<body>
-
-<div class="sidebar">
-    <div class="logo">
-        <i class="bi bi-speedometer2"></i> FujiRak
-    </div>
-    <ul>
-        <li><a href="index.php?route=admin/dashboard"><i class="bi bi-graph-up"></i> Dashboard</a></li>
-        <li><a href="index.php?route=admin/users" class="active"><i class="bi bi-people"></i> Utilisateurs</a></li>
-        <li><a href="index.php?route=admin/gains"><i class="bi bi-plus-circle"></i> Gains</a></li>
-        <li><a href="index.php?route=admin/pertes"><i class="bi bi-dash-circle"></i> Pertes</a></li>
-        <li><a href="index.php?route=logout"><i class="bi bi-box-arrow-right"></i> Déconnexion</a></li>
-    </ul>
-</div>
-
-<div class="main-content">
-    <div class="header">
-        <h1><i class="bi bi-people"></i> Gestion des Utilisateurs</h1>
-        <button type="button" class="add-btn" data-bs-toggle="modal" data-bs-target="#addUserModal">
-            <i class="bi bi-plus-lg"></i> Ajouter Utilisateur
-        </button>
-    </div>
-
-    <?php if (isset($_SESSION['success'])): ?>
-        <div class="alert-container">
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <i class="bi bi-check-circle"></i> <?= htmlspecialchars($_SESSION['success']) ?>
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+<body class="bg-light">
+    <div class="container py-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h1>Administration des utilisateurs</h1>
+                <p class="text-muted">Créer des comptes, valider les demandes et gérer les gains et les pertes.</p>
+            </div>
+            <div>
+                <a href="index.php?route=admin/dashboard" class="btn btn-outline-secondary me-2">Retour au dashboard</a>
+                <a href="index.php?route=logout" class="btn btn-danger">Déconnexion</a>
             </div>
         </div>
         <?php unset($_SESSION['success']); ?>
