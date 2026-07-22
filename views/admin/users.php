@@ -14,7 +14,7 @@
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
                 <h1>Administration des utilisateurs</h1>
-                <p class="text-muted">Créer des comptes, valider les demandes et gérer les gains/pertes.</p>
+                <p class="text-muted">Créer des comptes, valider les demandes et gérer les gains et les pertes.</p>
             </div>
             <div>
                 <a href="index.php?route=admin/dashboard" class="btn btn-outline-secondary me-2">Retour au dashboard</a>
