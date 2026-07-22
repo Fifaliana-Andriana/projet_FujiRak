@@ -1,5 +1,5 @@
 <?php
-$userAvatar = $user['avatar'] ?: 'assets/images/default-avatar.png';
+$userAvatar = $users['avatar'] ?: 'assets/images/default-avatar.png';
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -57,31 +57,31 @@ $userAvatar = $user['avatar'] ?: 'assets/images/default-avatar.png';
                         <div class="row g-3 mb-3">
                             <div class="col-md-6">
                                 <label class="form-label">Nom</label>
-                                <input type="text" class="form-control" value="<?php echo htmlspecialchars($user['nom']); ?>" disabled>
+                                <input type="text" class="form-control" value="<?php echo htmlspecialchars($users['nom']); ?>" disabled>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Prénom</label>
-                                <input type="text" class="form-control" value="<?php echo htmlspecialchars($user['prenom']); ?>" disabled>
+                                <input type="text" class="form-control" value="<?php echo htmlspecialchars($users['prenom']); ?>" disabled>
                             </div>
                         </div>
                         <div class="row g-3 mb-3">
                             <div class="col-md-6">
                                 <label class="form-label">Email</label>
-                                <input type="email" class="form-control" value="<?php echo htmlspecialchars($user['email']); ?>" disabled>
+                                <input type="email" class="form-control" value="<?php echo htmlspecialchars($users['email']); ?>" disabled>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Nom d'utilisateur</label>
-                                <input type="text" class="form-control" value="<?php echo htmlspecialchars($user['username']); ?>" disabled>
+                                <input type="text" class="form-control" value="<?php echo htmlspecialchars($users['username']); ?>" disabled>
                             </div>
                         </div>
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <label class="form-label">Classe</label>
-                                <input type="text" class="form-control" value="<?php echo htmlspecialchars($user['classe']); ?>" disabled>
+                                <input type="text" class="form-control" value="<?php echo htmlspecialchars($users['classe']); ?>" disabled>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Rôle</label>
-                                <input type="text" class="form-control" value="<?php echo htmlspecialchars($user['role']); ?>" disabled>
+                                <input type="text" class="form-control" value="<?php echo htmlspecialchars($users['role']); ?>" disabled>
                             </div>
                         </div>
                     </form>
