@@ -312,7 +312,6 @@ if (!isset($users)) {
             </div>
         </div>
         <?php unset($_SESSION['success']); ?>
-    <?php endif; ?>
 
     <?php if (isset($_SESSION['error'])): ?>
         <div class="alert-container">

@@ -110,3 +110,4 @@ CREATE TABLE IF NOT EXISTS admin_logs (
     FOREIGN KEY (admin_id) REFERENCES users(id) ON DELETE CASCADE,
     INDEX idx_admin_date (admin_id, date_action)
 ) ENGINE=InnoDB;
+

@@ -4,9 +4,9 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 $images = [
-    '/assets/images/image2.jpg',
-    '/assets/images/image3.jpg',
-    '/assets/images/image4.jpg'
+    '/assets/images/backgrounds/image2.jpg',
+    '/assets/images/backgrounds/image3.jpg',
+    '/assets/images/backgrounds/image4.jpg'
 ];
 ?>
 <!DOCTYPE html>
@@ -144,7 +144,7 @@ $images = [
                 
                 <!-- Logo centré proprement -->
                 <div class="text-start mb-4">
-                    <img src="../assets/images/logolight.png" alt="FujiRak Logo" class="logo-img">
+                    <img src="../assets/images/logos/logolight.png" alt="FujiRak Logo" class="logo-img">
                 </div>
 
                 <h2 class="text-center title-teal mb-1">Connexion</h2>
