@@ -182,4 +182,60 @@ class UserController {
         header('Location: index.php?route=user/profile');
         exit();
     }
+
+    public function showAdminUsers() {
+        $users = $this->userModel->getAll();
+        require_once __DIR__ . '/../views/admin/users.php';
+    }
+
+    public function createAdminUser() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header('Location: index.php?route=admin/users');
+            exit();
+        }
+
+        $email = trim($_POST['email'] ?? '');
+        $nom = trim($_POST['nom'] ?? '');
+        $prenom = trim($_POST['prenom'] ?? '');
+        $password = $_POST['password'] ?? '';
+        $classe = $_POST['classe'] ?? 'simple';
+        $role = $_POST['role'] ?? 'user';
+        $username = strtolower(substr($prenom, 0, 1) . '.' . $nom);
+
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL) || $nom === '' || $prenom === '' || $password === '') {
+            $_SESSION['error'] = 'Tous les champs obligatoires doivent être renseignés.';
+            header('Location: index.php?route=admin/users');
+            exit();
+        }
+
+        if (!in_array($classe, ['simple', 'gold', 'plus'], true) || !in_array($role, ['user', 'admin'], true)) {
+            $_SESSION['error'] = 'Les paramètres du compte sont invalides.';
+            header('Location: index.php?route=admin/users');
+            exit();
+        }
+
+        $result = $this->userModel->create($email, $username, $nom, $prenom, $password, $classe, $role);
+        $_SESSION[$result['success'] ? 'success' : 'error'] = $result['message'];
+        header('Location: index.php?route=admin/users');
+        exit();
+    }
+
+    public function deleteAdminUser() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header('Location: index.php?route=admin/users');
+            exit();
+        }
+
+        $userId = (int) ($_POST['user_id'] ?? 0);
+        if ($userId <= 0 || $userId === (int) $_SESSION['user_id']) {
+            $_SESSION['error'] = 'La suppression de cet utilisateur est impossible.';
+            header('Location: index.php?route=admin/users');
+            exit();
+        }
+
+        $_SESSION[$this->userModel->delete($userId) ? 'success' : 'error'] =
+            $this->userModel->delete($userId) ? 'Utilisateur supprimé.' : 'Utilisateur introuvable.';
+        header('Location: index.php?route=admin/users');
+        exit();
+    }
 }

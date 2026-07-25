@@ -45,17 +45,19 @@ class User {
     }
 
     // Admin : créer un utilisateur
-    public function create($email, $password, $classe = 'simple', $role = 'user') {
+    public function create($email, $username, $nom, $prenom, $password, $classe = 'simple', $role = 'user') {
         // Vérifier si l'email existe déjà
         if ($this->findByEmail($email)) {
             return ['success' => false, 'message' => 'Cet email existe déjà'];
         }
 
-        $query = "INSERT INTO " . $this->table . " (email, password, classe, role) 
-                  VALUES (:email, :password, :classe, :role)";
+        $query = "INSERT INTO " . $this->table . " (nom, prenom, email, password, classe, role, is_verified, is_active)
+                  VALUES (:nom, :prenom, :email, :password, :classe, :role, 1, 1)";
         
         $stmt = $this->conn->prepare($query);
         $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
+        $stmt->bindParam(':nom', $nom);
+        $stmt->bindParam(':prenom', $prenom);
         $stmt->bindParam(':email', $email);
         $stmt->bindParam(':password', $hashedPassword);
         $stmt->bindParam(':classe', $classe);
@@ -70,11 +72,18 @@ class User {
 
     // Récupérer tous les utilisateurs
     public function getAll() {
-        $query = "SELECT id, email, classe, role, is_active, photo, last_login, date_creation 
+        $query = "SELECT id, nom, prenom, email, classe, role, is_active, last_login, date_creation
                   FROM " . $this->table . " ORDER BY date_creation DESC";
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function delete($userId) {
+        $query = "DELETE FROM " . $this->table . " WHERE id = :id";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindValue(':id', (int) $userId, PDO::PARAM_INT);
+        return $stmt->execute() && $stmt->rowCount() === 1;
     }
 
     public function getTotalUsers() {
@@ -89,6 +98,27 @@ class User {
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function findById($userId) {
+        $query = "SELECT * FROM " . $this->table . " WHERE id = :id LIMIT 1";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':id', $userId, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function updateAvatar($userId, $avatarPath) {
+        return true;
+    }
+
+    public function changePassword($userId, $newPassword) {
+        $query = "UPDATE " . $this->table . " SET password = :password WHERE id = :id";
+        $stmt = $this->conn->prepare($query);
+        $hashedPassword = password_hash($newPassword, PASSWORD_BCRYPT);
+        $stmt->bindParam(':password', $hashedPassword);
+        $stmt->bindParam(':id', $userId, PDO::PARAM_INT);
+        return $stmt->execute();
     }
 }
 ?>

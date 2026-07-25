@@ -6,6 +6,7 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 require_once 'controllers/AuthController.php';
+require_once 'controllers/UserController.php';
 
 $route = $_GET['route'] ?? 'login';
 $auth = new AuthController();
@@ -37,6 +38,30 @@ switch ($route) {
             exit();
         }
         require 'views/admin/dashboard.php';
+        break;
+
+    case 'admin/users':
+        if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'admin') {
+            header('Location: index.php?route=login');
+            exit();
+        }
+        (new UserController())->showAdminUsers();
+        break;
+
+    case 'admin/create-user':
+        if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'admin') {
+            header('Location: index.php?route=login');
+            exit();
+        }
+        (new UserController())->createAdminUser();
+        break;
+
+    case 'admin/delete-user':
+        if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'admin') {
+            header('Location: index.php?route=login');
+            exit();
+        }
+        (new UserController())->deleteAdminUser();
         break;
 
     default:
