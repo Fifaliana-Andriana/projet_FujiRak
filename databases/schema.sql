@@ -168,6 +168,52 @@ CREATE TABLE notifications (
 ) ENGINE=InnoDB;
 
 
+
+-- ==========================================
+-- TABLE FACTURES (fichiers envoyés par l'admin : PDF, DOC, XLSX...)
+-- ==========================================
+
+CREATE TABLE factures (
+
+    id INT AUTO_INCREMENT PRIMARY KEY,
+
+    user_id INT NOT NULL,
+
+    uploaded_by INT NOT NULL,
+
+    original_name VARCHAR(255) NOT NULL,
+
+    stored_name VARCHAR(255) NOT NULL,
+
+    file_type VARCHAR(10) NOT NULL,
+
+    file_size INT NOT NULL,
+
+    description VARCHAR(255),
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_facture_user
+        FOREIGN KEY(user_id)
+        REFERENCES users(id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT fk_facture_admin
+        FOREIGN KEY(uploaded_by)
+        REFERENCES users(id)
+        ON DELETE CASCADE,
+
+    INDEX idx_facture_user(user_id),
+    INDEX idx_facture_date(created_at)
+
+) ENGINE=InnoDB;
+
+
+
+/*
+Insertion par defaut du compte de l'admin (mot de passe = Finixiias@2026)
+*/
+
 INSERT INTO users
 (
     username,

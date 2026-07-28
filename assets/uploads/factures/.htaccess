@@ -1,0 +1,7 @@
+# Empêche l'exécution de tout script PHP dans ce dossier
+# et interdit la liste des fichiers (defense-in-depth pour l'upload de documents)
+<FilesMatch "\.(php|phar|phtml|php3|php4|php5|php7)$">
+    Require all denied
+</FilesMatch>
+
+Options -Indexes
