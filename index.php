@@ -64,8 +64,6 @@ $userRoutes = [
     'user/profile',
     'user/update-avatar',
     'user/history',
-    'user/add-gain',
-    'user/add-perte',
     'user/documents',
 ];
 
@@ -187,14 +185,6 @@ switch ($route) {
 
     case 'user/history':
         $userController->showHistory();
-        break;
-
-    case 'user/add-gain':
-        $userController->addGain();
-        break;
-
-    case 'user/add-perte':
-        $userController->addPerte();
         break;
 
     case 'user/documents':

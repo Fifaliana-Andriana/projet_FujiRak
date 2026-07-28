@@ -1,9 +1,9 @@
-DROP DATABASE IF EXISTS fujirak_dashboard;
-CREATE DATABASE fujirak_dashboard
+DROP DATABASE IF EXISTS finixiias_dashboard;
+CREATE DATABASE finixiias_dashboard
 CHARACTER SET utf8mb4
 COLLATE utf8mb4_unicode_ci;
 
-USE fujirak_dashboard;
+USE finixiias_dashboard;
 
 -- ==========================================
 -- TABLE USERS

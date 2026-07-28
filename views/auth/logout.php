@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="fr">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,7 +16,6 @@
             background: linear-gradient(135deg, #04a59d 0%, #16213e 50%, #1a1a2e 100%);
             font-family: Arial, sans-serif;
         }
-
         .confirm-card {
             background: white;
             border-radius: 20px;
@@ -26,14 +24,9 @@
             max-width: 420px;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
         }
-
-        .confirm-card i {
-            font-size: 48px;
-            color: #04a59d;
-        }
+        .confirm-card i { font-size: 48px; color: #04a59d; }
     </style>
 </head>
-
 <body>
     <div class="confirm-card">
         <i class="bi bi-box-arrow-right mb-3 d-block"></i>
@@ -46,5 +39,4 @@
         </form>
     </div>
 </body>
-
 </html>

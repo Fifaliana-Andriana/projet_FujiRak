@@ -11,12 +11,10 @@
 </div>
 
 <?php if (isset($_SESSION['error'])): ?>
-        <div class="alert alert-danger"><?= htmlspecialchars($_SESSION['error']);
-        unset($_SESSION['error']); ?></div>
+    <div class="alert alert-danger"><?= htmlspecialchars($_SESSION['error']); unset($_SESSION['error']); ?></div>
 <?php endif; ?>
 <?php if (isset($_SESSION['success'])): ?>
-        <div class="alert alert-success"><?= htmlspecialchars($_SESSION['success']);
-        unset($_SESSION['success']); ?></div>
+    <div class="alert alert-success"><?= htmlspecialchars($_SESSION['success']); unset($_SESSION['success']); ?></div>
 <?php endif; ?>
 
 <!-- Filtre par classe -->
@@ -51,38 +49,38 @@
             </thead>
             <tbody>
                 <?php if (empty($users)): ?>
-                        <tr><td colspan="7" class="text-center text-muted py-4">Aucun utilisateur trouvé.</td></tr>
+                    <tr><td colspan="7" class="text-center text-muted py-4">Aucun utilisateur trouvé.</td></tr>
                 <?php else: ?>
-                        <?php foreach ($users as $u): ?>
-                                <tr>
-                                    <td class="text-center"><?= htmlspecialchars($u['username']) ?></td>
-                                    <td class="text-center"><?= htmlspecialchars($u['email']) ?></td>
-                                    <td class="text-center">
-                                        <span class="class-badge class-<?= $u['classe'] ?>">
-                                            <?= ucfirst($u['classe']) ?>
-                                        </span>
-                                    </td>
-                                    <td class="text-center"><?= $u['role'] === 'admin' ? 'Admin' : 'Utilisateur' ?></td>
-                                    <td class="text-center">
-                                        <?php if ($u['is_active']): ?>
-                                                <span class="badge bg-success">Actif</span>
-                                        <?php else: ?>
-                                                <span class="badge bg-secondary">Désactivé</span>
-                                        <?php endif; ?>
-                                    </td>
-                                    <td class="text-center"><?= date('d/m/Y', strtotime($u['created_at'])) ?></td>
-                                    <td class="text-center">
-                                        <a href="index.php?route=admin/edit-user&id=<?= $u['id'] ?>" class="me-2">
-                                           <i class="bi bi-pencil-square text-success"></i>
-                                        </a>
-                                        <?php if ($u['is_active'] && $u['id'] != $_SESSION['user_id']): ?>
-                                                <a href="index.php?route=admin/delete-user&id=<?= $u['id'] ?>">
-                                                    <i class="bi bi-slash-circle text-danger"></i>
-                                                </a>
-                                        <?php endif; ?>
-                                    </td>
-                                </tr>
-                        <?php endforeach; ?>
+                    <?php foreach ($users as $u): ?>
+                        <tr>
+                            <td class="text-center"><?= htmlspecialchars($u['username']) ?></td>
+                            <td class="text-center"><?= htmlspecialchars($u['email']) ?></td>
+                            <td class="text-center">
+                                <span class="class-badge class-<?= $u['classe'] ?>">
+                                    <?= ucfirst($u['classe']) ?>
+                                </span>
+                            </td>
+                            <td class="text-center"><?= $u['role'] === 'admin' ? 'Admin' : 'Utilisateur' ?></td>
+                            <td class="text-center">
+                                <?php if ($u['is_active']): ?>
+                                    <span class="badge bg-success">Actif</span>
+                                <?php else: ?>
+                                    <span class="badge bg-secondary">Désactivé</span>
+                                <?php endif; ?>
+                            </td>
+                            <td class="text-center"><?= date('d/m/Y', strtotime($u['created_at'])) ?></td>
+                            <td class="text-center">
+                                <a href="index.php?route=admin/edit-user&id=<?= $u['id'] ?>" class="me-2">
+                                   <i class="bi bi-pencil-square text-success"></i>
+                                </a>
+                                <?php if ($u['is_active'] && $u['id'] != $_SESSION['user_id']): ?>
+                                    <a href="index.php?route=admin/delete-user&id=<?= $u['id'] ?>">
+                                        <i class="bi bi-slash-circle text-danger"></i>
+                                    </a>
+                                <?php endif; ?>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
                 <?php endif; ?>
             </tbody>
         </table>

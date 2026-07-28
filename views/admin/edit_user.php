@@ -1,23 +1,17 @@
 <div class="page-header mb-4">
-    <h2 class="fw-bold mb-1">Modifier :
-        <?= htmlspecialchars($editUser['username']) ?>
-    </h2>
+    <h2 class="fw-bold mb-1">Modifier : <?= htmlspecialchars($editUser['username']) ?></h2>
     <p class="text-muted mb-0">
         Modifie les infos du compte ou son mot de passe, puis renvoie les changements à l'utilisateur par Gmail.
     </p>
 </div>
 
 <?php if (isset($_SESSION['error'])): ?>
-    <div class="alert alert-danger">
-        <?= htmlspecialchars($_SESSION['error']);
-        unset($_SESSION['error']); ?>
-    </div>
+    <div class="alert alert-danger"><?= htmlspecialchars($_SESSION['error']);
+    unset($_SESSION['error']); ?></div>
 <?php endif; ?>
 <?php if (isset($_SESSION['success'])): ?>
-    <div class="alert alert-success">
-        <?= htmlspecialchars($_SESSION['success']);
-        unset($_SESSION['success']); ?>
-    </div>
+    <div class="alert alert-success"><?= htmlspecialchars($_SESSION['success']);
+    unset($_SESSION['success']); ?></div>
 <?php endif; ?>
 
 <div class="row g-4">

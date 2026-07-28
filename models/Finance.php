@@ -52,10 +52,10 @@ class Finance
 
     public function getUserTransactionHistory($userId, $limit = 0)
     {
-        $sql = "SELECT id, 'gain' AS type, montant, description, source AS category, date_gain AS date_transaction, date_creation FROM gains WHERE user_id = :user_id"
+        $sql = "SELECT id, 'gain' AS type, montant, description, source AS category, date_gain AS date_transaction, created_at FROM gains WHERE user_id = :user_id"
             . " UNION ALL "
-            . "SELECT id, 'perte' AS type, montant, description, categorie AS category, date_perte AS date_transaction, date_creation FROM pertes WHERE user_id = :user_id"
-            . " ORDER BY date_transaction DESC, date_creation DESC";
+            . "SELECT id, 'perte' AS type, montant, description, categorie AS category, date_perte AS date_transaction, created_at FROM pertes WHERE user_id = :user_id"
+            . " ORDER BY date_transaction DESC, created_at DESC";
 
         if ($limit > 0) {
             $sql .= " LIMIT " . intval($limit);
@@ -292,6 +292,70 @@ LIMIT ?
         return (float) $this->conn
             ->query($sql)
             ->fetch()['total'];
+    }
+
+    // Alias structuré, attendu par DashboardController::showAdminDashboard()
+    public function getTotalGainsLosses()
+    {
+        $gains = $this->getTotalGains();
+        $pertes = $this->getTotalPertes();
+
+        return [
+            'gains' => $gains,
+            'pertes' => $pertes,
+            'solde' => $gains - $pertes,
+        ];
+    }
+
+    // Courbe générale (tous utilisateurs confondus), par jour/mois/année
+    public function getGeneralTrend($period = 'month')
+    {
+        $format = match ($period) {
+            'day' => '%Y-%m-%d',
+            'year' => '%Y',
+            default => '%Y-%m',
+        };
+
+        $stmtGains = $this->conn->prepare(
+            "SELECT DATE_FORMAT(date_gain, '$format') AS period, COALESCE(SUM(montant), 0) AS total
+             FROM gains GROUP BY period ORDER BY period ASC"
+        );
+        $stmtGains->execute();
+        $gains = $stmtGains->fetchAll(PDO::FETCH_ASSOC);
+
+        $stmtPertes = $this->conn->prepare(
+            "SELECT DATE_FORMAT(date_perte, '$format') AS period, COALESCE(SUM(montant), 0) AS total
+             FROM pertes GROUP BY period ORDER BY period ASC"
+        );
+        $stmtPertes->execute();
+        $pertes = $stmtPertes->fetchAll(PDO::FETCH_ASSOC);
+
+        $labels = [];
+        foreach ($gains as $row) {
+            $labels[$row['period']] = true;
+        }
+        foreach ($pertes as $row) {
+            $labels[$row['period']] = true;
+        }
+        ksort($labels);
+        $labels = array_keys($labels);
+
+        $gainsByPeriod = array_column($gains, 'total', 'period');
+        $pertesByPeriod = array_column($pertes, 'total', 'period');
+
+        $gainData = [];
+        $perteData = [];
+        foreach ($labels as $label) {
+            $gainData[] = isset($gainsByPeriod[$label]) ? (float) $gainsByPeriod[$label] : 0.0;
+            $perteData[] = isset($pertesByPeriod[$label]) ? (float) $pertesByPeriod[$label] : 0.0;
+        }
+
+        return [
+            'labels' => $labels,
+            'gains' => $gainData,
+            'pertes' => $perteData,
+            'period' => $period,
+        ];
     }
 
     public function getMonthlyStatistics()

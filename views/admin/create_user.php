@@ -7,10 +7,7 @@
 </div>
 
 <?php if (isset($_SESSION['error'])): ?>
-    <div class="alert alert-danger">
-        <?= htmlspecialchars($_SESSION['error']);
-        unset($_SESSION['error']); ?>
-    </div>
+    <div class="alert alert-danger"><?= htmlspecialchars($_SESSION['error']); unset($_SESSION['error']); ?></div>
 <?php endif; ?>
 
 <div class="card shadow-sm d-flex align-items-center justify-content-center w-100">

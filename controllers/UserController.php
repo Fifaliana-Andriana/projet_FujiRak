@@ -158,45 +158,4 @@ class UserController
         $page = 'views/user/history.php';
         require __DIR__ . '/../views/layouts/app.php';
     }
-
-    public function addGain()
-    {
-        $this->addTransaction('gain');
-    }
-
-    public function addPerte()
-    {
-        $this->addTransaction('perte');
-    }
-
-    private function addTransaction($type)
-    {
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            header('Location: index.php?route=user/dashboard');
-            exit();
-        }
-
-        $userId = $_SESSION['user_id'];
-        $amount = floatval($_POST['amount'] ?? 0);
-        $description = trim($_POST['description'] ?? '');
-        $meta = trim($_POST[$type === 'gain' ? 'source' : 'categorie'] ?? '');
-        $date = $_POST['date'] ?? date('Y-m-d');
-
-        if ($amount <= 0) {
-            $_SESSION['error'] = 'Le montant doit être supérieur à 0.';
-            header('Location: index.php?route=user/dashboard');
-            exit();
-        }
-
-        $result = $type === 'gain'
-            ? $this->financeModel->addGain($userId, $amount, $description, $meta, $date)
-            : $this->financeModel->addPerte($userId, $amount, $description, $meta, $date);
-
-        $_SESSION[$result ? 'success' : 'error'] = $result
-            ? ucfirst($type) . ' ajouté avec succès.'
-            : "Échec de l'ajout.";
-
-        header('Location: index.php?route=user/dashboard');
-        exit();
-    }
 }

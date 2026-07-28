@@ -12,12 +12,10 @@ $photoSrc = str_contains($photo, '/') ? $photo : 'assets/uploads/avatars/' . $ph
 </div>
 
 <?php if (isset($_SESSION['error'])): ?>
-        <div class="alert alert-danger"><?= htmlspecialchars($_SESSION['error']);
-        unset($_SESSION['error']); ?></div>
+    <div class="alert alert-danger"><?= htmlspecialchars($_SESSION['error']); unset($_SESSION['error']); ?></div>
 <?php endif; ?>
 <?php if (isset($_SESSION['success'])): ?>
-        <div class="alert alert-success"><?= htmlspecialchars($_SESSION['success']);
-        unset($_SESSION['success']); ?></div>
+    <div class="alert alert-success"><?= htmlspecialchars($_SESSION['success']); unset($_SESSION['success']); ?></div>
 <?php endif; ?>
 
 <div class="row g-4 mb-5">
@@ -74,16 +72,16 @@ $photoSrc = str_contains($photo, '/') ? $photo : 'assets/uploads/avatars/' . $ph
             </thead>
             <tbody>
                 <?php if (empty($transactions)): ?>
-                        <tr><td colspan="4" class="text-center text-muted py-4">Aucune transaction pour le moment.</td></tr>
+                    <tr><td colspan="4" class="text-center text-muted py-4">Aucune transaction pour le moment.</td></tr>
                 <?php else: ?>
-                        <?php foreach ($transactions as $t): ?>
-                                <tr>
-                                    <td><?= date('d/m/Y', strtotime($t['date_transaction'])) ?></td>
-                                    <td><?= $t['type'] === 'gain' ? '<span class="badge bg-success">Gain</span>' : '<span class="badge bg-danger">Perte</span>' ?></td>
-                                    <td><?= htmlspecialchars($t['description'] ?? '') ?></td>
-                                    <td><?= number_format($t['montant'], 2, ',', ' ') ?> Ar</td>
-                                </tr>
-                        <?php endforeach; ?>
+                    <?php foreach ($transactions as $t): ?>
+                        <tr>
+                            <td><?= date('d/m/Y', strtotime($t['date_transaction'])) ?></td>
+                            <td><?= $t['type'] === 'gain' ? '<span class="badge bg-success">Gain</span>' : '<span class="badge bg-danger">Perte</span>' ?></td>
+                            <td><?= htmlspecialchars($t['description'] ?? '') ?></td>
+                            <td><?= number_format($t['montant'], 2, ',', ' ') ?> Ar</td>
+                        </tr>
+                    <?php endforeach; ?>
                 <?php endif; ?>
             </tbody>
         </table>
