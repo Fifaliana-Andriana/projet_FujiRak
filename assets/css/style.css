@@ -108,13 +108,13 @@
 
 /* Boutons "Annuler" / "Retour" : couleur grenade dédiée */
 .btn-cancel {
-    background: #C83F49;
     border: none;
-    color: white;
+    color: #C83F49;
 }
 .btn-cancel:hover {
     background: #b23640;
     color: white;
+    font-weight: bolder;
 }
 
 /* ==========================================================================
@@ -125,22 +125,88 @@ body.theme-dark {
     background: #1e1e1e;
     color: #e0e0e0;
 }
+
+/* Cartes, navbar */
 body.theme-dark .card,
 body.theme-dark .dashboard-card,
 body.theme-dark .navbar {
-    background: #1e1e1e !important;
+    background: #2a2a2a !important;
     color: #e0e0e0;
 }
-body.theme-dark .table {
+body.theme-dark .card-header {
+    background: #2a2a2a !important;
+    border-color: #3a3a3a;
     color: #e0e0e0;
+}
+
+/* Titres et textes */
+body.theme-dark h1,
+body.theme-dark h2,
+body.theme-dark h3,
+body.theme-dark h4,
+body.theme-dark h5,
+body.theme-dark h6,
+body.theme-dark .page-header h2,
+body.theme-dark label,
+body.theme-dark dt,
+body.theme-dark dd {
+    color: #e0e0e0 !important;
 }
 body.theme-dark .text-muted {
     color: #9a9a9a !important;
 }
 
-#head.theme-dark{
-    color: white;
+/* Tableaux */
+body.theme-dark .table {
+    color: #e0e0e0;
+    --bs-table-color: #e0e0e0;
+    --bs-table-bg: transparent;
 }
+body.theme-dark .table thead th {
+    background: #2a2a2a;
+    color: #e0e0e0;
+    border-color: #3a3a3a;
+}
+body.theme-dark .table td,
+body.theme-dark .table th {
+    border-color: #3a3a3a;
+}
+body.theme-dark .table-hover > tbody > tr:hover > * {
+    background: #333333;
+    color: #e0e0e0;
+}
+body.theme-dark .table-striped > tbody > tr:nth-of-type(odd) > * {
+    background: #262626;
+    color: #e0e0e0;
+}
+
+/* Formulaires */
+body.theme-dark .form-control,
+body.theme-dark .form-select {
+    background: #2a2a2a;
+    color: #e0e0e0;
+    border-color: #3a3a3a;
+}
+body.theme-dark .form-control:focus,
+body.theme-dark .form-select:focus {
+    background: #2a2a2a;
+    color: #e0e0e0;
+    border-color: var(--color-primary, #04a59d);
+}
+body.theme-dark .form-control::placeholder {
+    color: #888888;
+}
+
+/* Modals */
+body.theme-dark .modal-content {
+    background: #2a2a2a;
+    color: #e0e0e0;
+}
+body.theme-dark .modal-header,
+body.theme-dark .modal-footer {
+    border-color: #3a3a3a;
+}
+
 
 /* ==========================================================================
    Conteneur de graphique : hauteur FIXE obligatoire pour Chart.js responsive

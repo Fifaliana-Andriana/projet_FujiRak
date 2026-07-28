@@ -4,16 +4,16 @@
         <!-- Partie gauche -->
         <div class="container w-50 h100prc d-flex align-items-center justify-content-start">
             <!-- Bouton Sidebar -->
-            <div class="toogleContainer" style="width:10%">
-
-                <button id="sidebarToggle" class="btn btn-light border me-3">
-                    <i class="bi bi-list fs-4"></i>
+            <div class="toogleContainer d-flex justify-content-center align-items-center" style="width:10%">
+                <button id="sidebarToggle" class="btn btn-light border-0 me-3 text-center bg-transparent">
+                    <i class="bi bi-layout-sidebar lh-5"></i>
                 </button>
             </div>
 
             <!-- Logo -->
             <div class="logoContainer d-flex justify-content-start align-items-center">
-                <img src="assets/images/icons/icone.png" alt="Finixiias" width="70" class="">
+                <img id="iconeTogglelight" src="assets/images/icons/iconelight.png" alt="Finixiias" width="70" class="">
+                <img id="iconeToggledark" src="assets/images/icons/iconedark.png" alt="Finixiias" width="70" class="d-none">
             </div>
         </div>
 
@@ -35,7 +35,7 @@
                 <button class="profilUser btn p-0 border-0 bg-transparent" data-bs-toggle="dropdown">
 
                     <img src="<?= htmlspecialchars($photoSrc) ?>" class="rounded-circle border" width="45" height="45"
-                        style="object-fit:cover;" onerror="this.src='assets/images/icons/icone.png'">
+                        style="object-fit:cover;" onerror="this.src='assets/images/icons/iconedark.png'">
 
                 </button>
 

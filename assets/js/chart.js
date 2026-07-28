@@ -106,47 +106,49 @@ class TrendChart {
         const totalPertes = this.data.pertes.reduce((a, b) => a + b, 0);
 
         const config = isCircular
-            ? {
-                  type: 'doughnut',
-                  data: {
-                      labels: ['Gains', 'Pertes'],
-                      datasets: [{
-                          data: [totalGains, totalPertes],
-                          backgroundColor: ['#28a745', '#dc3545'],
-                      }],
+          ? {
+              type: "doughnut",
+              data: {
+                labels: ["Gains", "Pertes"],
+                datasets: [
+                  {
+                    data: [totalGains, totalPertes],
+                    backgroundColor: ["#28a745", "#C83F49"],
                   },
-                  options: { responsive: true, maintainAspectRatio: false },
-              }
-            : {
-                  type: this.chartType,
-                  data: {
-                      labels: this.data.labels,
-                      datasets: [
-                          {
-                              label: 'Gains',
-                              data: this.data.gains,
-                              backgroundColor: 'rgba(40, 167, 69, 0.7)',
-                              borderColor: '#28a745',
-                              borderWidth: 2,
-                              tension: 0.4,
-                          },
-                          {
-                              label: 'Pertes',
-                              data: this.data.pertes,
-                              backgroundColor: 'rgba(220, 53, 69, 0.7)',
-                              borderColor: '#dc3545',
-                              borderWidth: 2,
-                              tension: 0.4,
-                          },
-                      ],
+                ],
+              },
+              options: { responsive: true, maintainAspectRatio: false },
+            }
+          : {
+              type: this.chartType,
+              data: {
+                labels: this.data.labels,
+                datasets: [
+                  {
+                    label: "Gains",
+                    data: this.data.gains,
+                    backgroundColor: "rgba(40, 167, 69, 0.7)",
+                    borderColor: "#28a745",
+                    borderWidth: 2,
+                    tension: 0.4,
                   },
-                  options: {
-                      responsive: true,
-                      maintainAspectRatio: false,
-                      plugins: { legend: { display: true } },
-                      scales: { y: { beginAtZero: true } },
+                  {
+                    label: "Pertes",
+                    data: this.data.pertes,
+                    backgroundColor: "rgba(220, 53, 69, 0.7)",
+                    borderColor: "#C83F49",
+                    borderWidth: 2,
+                    tension: 0.4,
                   },
-              };
+                ],
+              },
+              options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: true } },
+                scales: { y: { beginAtZero: true } },
+              },
+            };
 
         this.chart = new Chart(ctx, config);
     }
