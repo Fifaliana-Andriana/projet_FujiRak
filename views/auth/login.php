@@ -4,9 +4,9 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 
 $images = [
-    '/assets/images/backgrounds/image2.jpg',
-    '/assets/images/backgrounds/image3.jpg',
-    '/assets/images/backgrounds/image4.jpg'
+    'assets/images/backgrounds/image2.jpg',
+    'assets/images/backgrounds/image3.jpg',
+    'assets/images/backgrounds/image4.jpg'
 ];
 ?>
 <!DOCTYPE html>
@@ -15,7 +15,7 @@ $images = [
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Connexion - FujiRak Dashboard</title>
+    <title>Finixiias</title>
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
@@ -30,7 +30,7 @@ $images = [
         body {
             margin: 0;
             padding: 0;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            background: linear-gradient(135deg, #04a59d 0%, #16213e 50%, #171717 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -144,7 +144,7 @@ $images = [
                 
                 <!-- Logo centré proprement -->
                 <div class="text-start mb-4">
-                    <img src="../assets/images/logos/logolight.png" alt="FujiRak Logo" class="logo-img">
+                    <img src="assets/images/logos/logolight.png" alt="Finixiias Logo" class="logo-img">
                 </div>
 
                 <h2 class="text-center title-teal mb-1">Connexion</h2>
@@ -174,7 +174,7 @@ $images = [
                     <div class="mb-3">
                         <div class="d-flex justify-content-between align-items-center mb-1">
                             <label class="form-label fw-bold mb-0">Mot de passe</label>
-                            <a href="index.php?route=edit-password" class="small link-teal">Oublié ?</a>
+                            <a href="mailto:finixiiasadmin@gmail.com?subject=Mot%20de%20passe%20oubli%C3%A9" class="small link-teal">Oublié ?</a>
                         </div>
                         <input type="password" name="password" class="form-control" placeholder="••••••••" required>
                     </div>

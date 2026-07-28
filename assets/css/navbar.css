@@ -1,45 +1,59 @@
-.navbar{
-
-    height:70px;
-
-    position:fixed;
-
-    top:0;
-
-    left:0;
-
-    right:0;
-
-    z-index:1000;
-
+.navbar {
+  height: 70px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
 }
 
-#sidebarToggle{
-
-    width:40px;
-
-    height:40px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
+#sidebarToggle {
+  /* width: 45px;
+  height: 45px; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-#themeToggle{
-
-    width:30px;
-
-    height:30px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    border-radius: 50%;
-
+#themeToggle {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
 }
 
-.navbar-brand img{
+.h100prc{
+  height: 100%;
+}
 
-    border-radius:10px;
+.navbar-brand img {
+  border-radius: 10px;
+}
 
+.profilUser {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.lineargradient {
+  background: linear-gradient(120deg, #04a59d 0%, #1a1a2e 90%);
+}
+
+.btnProfilStyle {
+  background: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bolder;
+  text-decoration: none;
+}
+
+.bolder{
+  font-weight: bolder;
 }

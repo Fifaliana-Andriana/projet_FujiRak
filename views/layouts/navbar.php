@@ -1,19 +1,24 @@
 <nav class="navbar navbar-expand-lg bg-white shadow-sm px-4 py-2">
 
-    <div class="container-fluid">
+    <div class="container-fluid d-flex justify-content-between h100prc" id="navContainer">
+        <!-- Partie gauche -->
+        <div class="container w-50 h100prc d-flex align-items-center justify-content-start">
+            <!-- Bouton Sidebar -->
+            <div class="toogleContainer" style="width:10%">
 
-        <!-- Bouton Sidebar -->
-        <button id="sidebarToggle" class="btn btn-light border me-3">
-            <i class="bi bi-list fs-4"></i>
-        </button>
+                <button id="sidebarToggle" class="btn btn-light border me-3">
+                    <i class="bi bi-list fs-4"></i>
+                </button>
+            </div>
 
-        <!-- Logo -->
-        <a class="navbar-brand d-flex align-items-center" href="#">
-            <img src="assets/images/icons/icone.png" alt="FujiRak" width="200" class="me-2">
-        </a>
+            <!-- Logo -->
+            <div class="logoContainer d-flex justify-content-start align-items-center">
+                <img src="assets/images/icons/icone.png" alt="Finixiias" width="70" class="">
+            </div>
+        </div>
 
         <!-- Partie droite -->
-        <div class="ms-auto d-flex align-items-center gap-3">
+        <div class="ms-auto d-flex justify-content-end align-items-center gap-3 w-50">
 
             <!-- Bouton thème -->
             <button class="btn btn-light" id="themeToggle">
@@ -23,21 +28,25 @@
             <!-- Profil -->
             <div class="dropdown">
 
-                <button class="btn p-0 border-0 bg-transparent" data-bs-toggle="dropdown">
+                <?php
+                $photo = $_SESSION['user_photo'] ?? 'default.png';
+                $photoSrc = str_contains($photo, '/') ? $photo : 'assets/uploads/avatars/' . $photo;
+                ?>
+                <button class="profilUser btn p-0 border-0 bg-transparent" data-bs-toggle="dropdown">
 
-                    <img src="assets/uploads/avatars/default.png" class="rounded-circle border" width="45" height="45"
-                        style="object-fit:cover;">
+                    <img src="<?= htmlspecialchars($photoSrc) ?>" class="rounded-circle border" width="45" height="45"
+                        style="object-fit:cover;" onerror="this.src='assets/images/icons/icone.png'">
 
                 </button>
 
-                <ul class="dropdown-menu dropdown-menu-end">
+                <ul class="dropdown-menu dropdown-menu-end lineargradient">
 
-                    <li class="dropdown-header">
+                    <li class="dropdown-header text-white">
                         <?= $_SESSION['username'] ?? 'Utilisateur'; ?>
                     </li>
 
-                    <li>
-                        <a class="dropdown-item" href="index.php?route=user/profile">
+                    <li class="">
+                        <a class="text-white btnProfilStyle" href="index.php?route=user/profile">
                             <i class="bi bi-person"></i>
                             Mon profil
                         </a>
@@ -45,15 +54,6 @@
 
                     <li>
                         <hr class="dropdown-divider">
-                    </li>
-
-                    <li>
-                        <a class="dropdown-item text-danger" href="index.php?route=logout">
-
-                            <i class="bi bi-box-arrow-right"></i>
-                            Déconnexion
-
-                        </a>
                     </li>
 
                 </ul>

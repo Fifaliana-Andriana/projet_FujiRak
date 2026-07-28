@@ -1,22 +1,26 @@
 <?php
+// controllers/UserController.php — espace Utilisateur
 
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../models/User.php';
 require_once __DIR__ . '/../models/Finance.php';
+require_once __DIR__ . '/../models/Facture.php';
 
-class UserController {
-    private $db;
+class UserController
+{
     private $userModel;
     private $financeModel;
+    private $factureModel;
 
-    public function __construct() {
-        $database = new Database();
-        $this->db = $database->getConnection();
+    public function __construct()
+    {
         $this->userModel = new User();
         $this->financeModel = new Finance();
+        $this->factureModel = new Facture();
     }
 
-    public function showHome() {
+    public function showDashboard()
+    {
         $userId = $_SESSION['user_id'];
         $period = $_GET['period'] ?? 'month';
         if (!in_array($period, ['day', 'month', 'year'], true)) {
@@ -27,215 +31,172 @@ class UserController {
         $trend = $this->financeModel->getUserTrend($userId, $period);
         $transactions = $this->financeModel->getUserTransactionHistory($userId, 8);
         $classe = $_SESSION['user_classe'];
-        require_once __DIR__ . '/../views/user/home.php';
+        $periodLabel = $period;
+
+        $page = 'views/user/dashboard.php';
+        require __DIR__ . '/../views/layouts/app.php';
     }
 
-    public function showProfile() {
+    public function statsJson()
+    {
+        $userId = $_SESSION['user_id'];
+        $period = $_GET['period'] ?? 'month';
+        if (!in_array($period, ['day', 'month', 'year'], true)) {
+            $period = 'month';
+        }
+        header('Content-Type: application/json');
+        echo json_encode($this->financeModel->getUserTrend($userId, $period));
+        exit();
+    }
+
+    public function showProfile()
+    {
         $user = $this->userModel->findById($_SESSION['user_id']);
-        require_once __DIR__ . '/../views/user/profile.php';
+        $transactions = $this->financeModel->getUserTransactionHistory($_SESSION['user_id'], 10);
+
+        $page = 'views/profile/profile.php';
+        require __DIR__ . '/../views/layouts/app.php';
     }
 
-    public function updateProfile() {
+    // Seul champ que l'utilisateur peut modifier lui-même : la photo de profil
+    public function updateAvatar()
+    {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             header('Location: index.php?route=user/profile');
             exit();
         }
 
         $userId = $_SESSION['user_id'];
-        $user = $this->userModel->findById($userId);
-        if (!$user) {
-            $_SESSION['error'] = 'Utilisateur introuvable.';
-            header('Location: index.php?route=user/profile');
-            exit();
-        }
-
         $uploadPath = __DIR__ . '/../assets/uploads/avatars';
         if (!is_dir($uploadPath)) {
             mkdir($uploadPath, 0755, true);
         }
 
-        if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] === UPLOAD_ERR_OK) {
-            $allowed = ['image/jpeg', 'image/png', 'image/webp'];
-            if (!in_array($_FILES['avatar']['type'], $allowed, true)) {
-                $_SESSION['error'] = 'Format de fichier non pris en charge. Utilisez JPG, PNG ou WebP.';
-                header('Location: index.php?route=user/profile');
-                exit();
-            }
+        if (!isset($_FILES['avatar']) || $_FILES['avatar']['error'] !== UPLOAD_ERR_OK) {
+            $_SESSION['error'] = "Aucun fichier reçu ou erreur pendant l'upload.";
+            header('Location: index.php?route=user/profile');
+            exit();
+        }
 
-            $extension = pathinfo($_FILES['avatar']['name'], PATHINFO_EXTENSION);
-            $filename = 'avatar_' . $userId . '_' . time() . '.' . $extension;
-            $destination = $uploadPath . '/' . $filename;
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        $realMime = finfo_file($finfo, $_FILES['avatar']['tmp_name']);
+        finfo_close($finfo);
 
-            if (move_uploaded_file($_FILES['avatar']['tmp_name'], $destination)) {
-                $relativePath = 'assets/uploads/avatars/' . $filename;
-                $this->userModel->updateAvatar($userId, $relativePath);
-                $_SESSION['success'] = 'Photo de profil mise à jour.';
-            } else {
-                $_SESSION['error'] = 'Impossible de téléverser la photo de profil.';
-            }
+        $allowed = ['image/jpeg' => 'jpg', 'image/png' => 'png', 'image/webp' => 'webp'];
+        if (!isset($allowed[$realMime])) {
+            $_SESSION['error'] = 'Format non pris en charge. Utilise JPG, PNG ou WebP.';
+            header('Location: index.php?route=user/profile');
+            exit();
+        }
+
+        if ($_FILES['avatar']['size'] > 2 * 1024 * 1024) {
+            $_SESSION['error'] = 'Fichier trop volumineux (2 Mo maximum).';
+            header('Location: index.php?route=user/profile');
+            exit();
+        }
+
+        $filename = 'avatar_' . $userId . '_' . time() . '.' . $allowed[$realMime];
+        $destination = $uploadPath . '/' . $filename;
+
+        if (move_uploaded_file($_FILES['avatar']['tmp_name'], $destination)) {
+            $relativePath = 'assets/uploads/avatars/' . $filename;
+            $this->userModel->updateAvatar($userId, $relativePath);
+            $_SESSION['user_photo'] = $relativePath;
+            $_SESSION['success'] = 'Photo de profil mise à jour.';
         } else {
-            $_SESSION['error'] = 'Aucun fichier reçu ou erreur pendant l\'upload.';
+            $_SESSION['error'] = 'Impossible de téléverser la photo de profil.';
         }
 
         header('Location: index.php?route=user/profile');
         exit();
     }
 
-    public function showHistory() {
+    public function showDocuments()
+    {
+        $factures = $this->factureModel->getByUser($_SESSION['user_id']);
+
+        $page = 'views/user/documents.php';
+        require __DIR__ . '/../views/layouts/app.php';
+    }
+
+    // Téléchargement contrôlé : un utilisateur ne peut télécharger que SES propres documents
+    public function downloadDocument()
+    {
+        $id = intval($_GET['id'] ?? 0);
+        $facture = $this->factureModel->findById($id);
+
+        $isOwner = $facture && $facture['user_id'] == $_SESSION['user_id'];
+        $isAdmin = ($_SESSION['user_role'] ?? null) === 'admin';
+
+        if (!$facture || (!$isOwner && !$isAdmin)) {
+            http_response_code(403);
+            require __DIR__ . '/../views/errors/403.php';
+            exit();
+        }
+
+        $filePath = __DIR__ . '/../assets/uploads/factures/' . $facture['stored_name'];
+        if (!file_exists($filePath)) {
+            http_response_code(404);
+            require __DIR__ . '/../views/errors/404.php';
+            exit();
+        }
+
+        header('Content-Description: File Transfer');
+        header('Content-Type: application/octet-stream');
+        header('Content-Disposition: attachment; filename="' . basename($facture['original_name']) . '"');
+        header('Content-Length: ' . filesize($filePath));
+        header('X-Content-Type-Options: nosniff');
+        readfile($filePath);
+        exit();
+    }
+
+    public function showHistory()
+    {
         $userId = $_SESSION['user_id'];
         $transactions = $this->financeModel->getUserTransactionHistory($userId);
-        require_once __DIR__ . '/../views/user/history.php';
+
+        $page = 'views/user/history.php';
+        require __DIR__ . '/../views/layouts/app.php';
     }
 
-    public function addGain() {
+    public function addGain()
+    {
+        $this->addTransaction('gain');
+    }
+
+    public function addPerte()
+    {
+        $this->addTransaction('perte');
+    }
+
+    private function addTransaction($type)
+    {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            header('Location: index.php?route=user/home');
+            header('Location: index.php?route=user/dashboard');
             exit();
         }
 
         $userId = $_SESSION['user_id'];
         $amount = floatval($_POST['amount'] ?? 0);
         $description = trim($_POST['description'] ?? '');
-        $source = trim($_POST['source'] ?? '');
+        $meta = trim($_POST[$type === 'gain' ? 'source' : 'categorie'] ?? '');
         $date = $_POST['date'] ?? date('Y-m-d');
 
         if ($amount <= 0) {
             $_SESSION['error'] = 'Le montant doit être supérieur à 0.';
-            header('Location: index.php?route=user/home');
+            header('Location: index.php?route=user/dashboard');
             exit();
         }
 
-        if ($this->financeModel->addGain($userId, $amount, $description, $source, $date)) {
-            $_SESSION['success'] = 'Gain ajouté avec succès.';
-        } else {
-            $_SESSION['error'] = 'Échec de l\'ajout du gain.';
-        }
+        $result = $type === 'gain'
+            ? $this->financeModel->addGain($userId, $amount, $description, $meta, $date)
+            : $this->financeModel->addPerte($userId, $amount, $description, $meta, $date);
 
-        header('Location: index.php?route=user/home');
-        exit();
-    }
+        $_SESSION[$result ? 'success' : 'error'] = $result
+            ? ucfirst($type) . ' ajouté avec succès.'
+            : "Échec de l'ajout.";
 
-    public function addPerte() {
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            header('Location: index.php?route=user/home');
-            exit();
-        }
-
-        $userId = $_SESSION['user_id'];
-        $amount = floatval($_POST['amount'] ?? 0);
-        $description = trim($_POST['description'] ?? '');
-        $categorie = trim($_POST['categorie'] ?? '');
-        $date = $_POST['date'] ?? date('Y-m-d');
-
-        if ($amount <= 0) {
-            $_SESSION['error'] = 'Le montant doit être supérieur à 0.';
-            header('Location: index.php?route=user/home');
-            exit();
-        }
-
-        if ($this->financeModel->addPerte($userId, $amount, $description, $categorie, $date)) {
-            $_SESSION['success'] = 'Perte ajoutée avec succès.';
-        } else {
-            $_SESSION['error'] = 'Échec de l\'ajout de la perte.';
-        }
-
-        header('Location: index.php?route=user/home');
-        exit();
-    }
-
-    public function changePassword() {
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            header('Location: index.php?route=user/profile');
-            exit();
-        }
-
-        $userId = $_SESSION['user_id'];
-        $currentPassword = $_POST['current_password'] ?? '';
-        $newPassword = $_POST['new_password'] ?? '';
-        $confirmPassword = $_POST['confirm_password'] ?? '';
-
-        if (empty($currentPassword) || empty($newPassword) || empty($confirmPassword)) {
-            $_SESSION['error'] = 'Tous les champs du mot de passe sont obligatoires.';
-            header('Location: index.php?route=user/profile');
-            exit();
-        }
-
-        if ($newPassword !== $confirmPassword) {
-            $_SESSION['error'] = 'Le nouveau mot de passe et sa confirmation ne correspondent pas.';
-            header('Location: index.php?route=user/profile');
-            exit();
-        }
-
-        $user = $this->userModel->findById($userId);
-        if (!$user || !password_verify($currentPassword, $user['password'])) {
-            $_SESSION['error'] = 'Mot de passe actuel incorrect.';
-            header('Location: index.php?route=user/profile');
-            exit();
-        }
-
-        if ($this->userModel->changePassword($userId, $newPassword)) {
-            $_SESSION['success'] = 'Mot de passe mis à jour avec succès.';
-        } else {
-            $_SESSION['error'] = 'Impossible de mettre à jour le mot de passe.';
-        }
-
-        header('Location: index.php?route=user/profile');
-        exit();
-    }
-
-    public function showAdminUsers() {
-        $users = $this->userModel->getAll();
-        require_once __DIR__ . '/../views/admin/users.php';
-    }
-
-    public function createAdminUser() {
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            header('Location: index.php?route=admin/users');
-            exit();
-        }
-
-        $email = trim($_POST['email'] ?? '');
-        $nom = trim($_POST['nom'] ?? '');
-        $prenom = trim($_POST['prenom'] ?? '');
-        $password = $_POST['password'] ?? '';
-        $classe = $_POST['classe'] ?? 'simple';
-        $role = $_POST['role'] ?? 'user';
-        $username = strtolower(substr($prenom, 0, 1) . '.' . $nom);
-
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL) || $nom === '' || $prenom === '' || $password === '') {
-            $_SESSION['error'] = 'Tous les champs obligatoires doivent être renseignés.';
-            header('Location: index.php?route=admin/users');
-            exit();
-        }
-
-        if (!in_array($classe, ['simple', 'gold', 'plus'], true) || !in_array($role, ['user', 'admin'], true)) {
-            $_SESSION['error'] = 'Les paramètres du compte sont invalides.';
-            header('Location: index.php?route=admin/users');
-            exit();
-        }
-
-        $result = $this->userModel->create($email, $username, $nom, $prenom, $password, $classe, $role);
-        $_SESSION[$result['success'] ? 'success' : 'error'] = $result['message'];
-        header('Location: index.php?route=admin/users');
-        exit();
-    }
-
-    public function deleteAdminUser() {
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            header('Location: index.php?route=admin/users');
-            exit();
-        }
-
-        $userId = (int) ($_POST['user_id'] ?? 0);
-        if ($userId <= 0 || $userId === (int) $_SESSION['user_id']) {
-            $_SESSION['error'] = 'La suppression de cet utilisateur est impossible.';
-            header('Location: index.php?route=admin/users');
-            exit();
-        }
-
-        $_SESSION[$this->userModel->delete($userId) ? 'success' : 'error'] =
-            $this->userModel->delete($userId) ? 'Utilisateur supprimé.' : 'Utilisateur introuvable.';
-        header('Location: index.php?route=admin/users');
+        header('Location: index.php?route=user/dashboard');
         exit();
     }
 }

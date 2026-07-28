@@ -1,60 +1,21 @@
+<?php require 'views/layouts/header.php'; ?>
+
 <?php
-
-$userRole = $_SESSION['user_role'] ?? null;
-
+if ($_SESSION['user_role'] == 'admin') {
+    require 'views/layouts/sidebar_admin.php';
+} else {
+    require 'views/layouts/sidebar_user.php';
+}
 ?>
-<!DOCTYPE html>
 
-<html lang="fr">
+<div class="main">
 
-<head>
+    <main class="content">
 
-    <?php require __DIR__ . '/header.php'; ?>
+        <?php require $page; ?>
 
-</head>
-
-<body>
-
-<div class="app">
-
-    <?php if ($userRole === 'admin'): ?>
-
-        <?php require __DIR__ . '/sidebar_admin.php'; ?>
-
-    <?php elseif ($userRole === 'user'): ?>
-
-        <?php require __DIR__ . '/sidebar_user.php'; ?>
-
-    <?php endif; ?>
-
-    <div class="main">
-
-        <?php require __DIR__ . '/navbar.php'; ?>
-
-        <main class="content">
-
-            <?php
-
-            if (isset($page) && file_exists($page)) {
-
-                require $page;
-
-            } else {
-
-                require __DIR__ . '/../errors/404.php';
-
-            }
-
-            ?>
-
-        </main>
-
-        <?php require __DIR__ . '/footer.php'; ?>
-
-    </div>
+    </main>
 
 </div>
 
-</body>
-
-</html>
+<?php require 'views/layouts/footer.php'; ?>

@@ -1,451 +1,90 @@
-<?php
-require_once __DIR__ . '/../../models/User.php';
-
-if (!isset($users)) {
-    $userModel = new User();
-    $users = $userModel->getAll();
-}
-?>
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestion des Utilisateurs - Admin</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <style>
-        :root {
-            --sidebar-width: 250px;
-            --primary-color: #1a1a2e;
-            --secondary-color: #16213e;
-            --accent-color: #0f3460;
-            --text-color: #eaeaea;
-        }
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            background: #f0f2f5;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            min-height: 100vh;
-        }
-        .sidebar {
-            position: fixed;
-            left: 0;
-            top: 0;
-            width: var(--sidebar-width);
-            height: 100vh;
-            background: linear-gradient(180deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-            padding: 20px 0;
-            z-index: 1000;
-            box-shadow: 2px 0 10px rgba(0,0,0,0.3);
-        }
-        .sidebar .logo {
-            text-align: center;
-            color: var(--text-color);
-            font-weight: bold;
-            font-size: 20px;
-            padding: 20px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            margin-bottom: 30px;
-        }
-        .sidebar ul {
-            list-style: none;
-        }
-        .sidebar ul li {
-            margin: 0;
-        }
-        .sidebar ul li a {
-            display: block;
-            color: var(--text-color);
-            text-decoration: none;
-            padding: 12px 20px;
-            transition: all 0.3s;
-            border-left: 3px solid transparent;
-        }
-        .sidebar ul li a:hover,
-        .sidebar ul li a.active {
-            background: var(--accent-color);
-            border-left-color: #e74c3c;
-        }
-        .main-content {
-            margin-left: var(--sidebar-width);
-            padding: 30px;
-        }
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-        }
-        .header h1 {
-            color: var(--primary-color);
-            font-weight: 600;
-            margin: 0;
-        }
-        .add-btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .add-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 15px rgba(102, 126, 234, 0.4);
-            color: white;
-            text-decoration: none;
-        }
-        .alert-container {
-            margin-bottom: 20px;
-        }
-        .alert {
-            border-radius: 8px;
-            border: none;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-        .table-container {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-            overflow: hidden;
-        }
-        .table {
-            margin: 0;
-            font-size: 14px;
-        }
-        .table thead {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-            color: var(--text-color);
-        }
-        .table thead th {
-            font-weight: 600;
-            padding: 15px;
-            border: none;
-            vertical-align: middle;
-        }
-        .table tbody tr {
-            transition: background 0.2s;
-            border-bottom: 1px solid #f0f0f0;
-        }
-        .table tbody tr:hover {
-            background: #f9f9f9;
-        }
-        .table tbody td {
-            padding: 15px;
-            vertical-align: middle;
-        }
-        .badge {
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-        .badge-role-admin {
-            background: #ff6b6b;
-            color: white;
-        }
-        .badge-role-user {
-            background: #4ecdc4;
-            color: white;
-        }
-        .badge-class-simple {
-            background: #95e1d3;
-            color: #333;
-        }
-        .badge-class-gold {
-            background: #ffd93d;
-            color: #333;
-        }
-        .badge-class-plus {
-            background: #ff6b9d;
-            color: white;
-        }
-        .badge-active {
-            background: #51cf66;
-            color: white;
-        }
-        .badge-inactive {
-            background: #868e96;
-            color: white;
-        }
-        .action-buttons {
-            display: flex;
-            gap: 8px;
-            justify-content: center;
-        }
-        .btn-icon {
-            width: 36px;
-            height: 36px;
-            padding: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 6px;
-            border: none;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-size: 16px;
-        }
-        .btn-edit {
-            background: #3498db;
-            color: white;
-        }
-        .btn-edit:hover {
-            background: #2980b9;
-            transform: scale(1.1);
-        }
-        .btn-delete {
-            background: #e74c3c;
-            color: white;
-        }
-        .btn-delete:hover {
-            background: #c0392b;
-            transform: scale(1.1);
-        }
-        .empty-state {
-            text-align: center;
-            padding: 60px 30px;
-            color: #7f8c8d;
-        }
-        .empty-state i {
-            font-size: 48px;
-            margin-bottom: 15px;
-            opacity: 0.5;
-        }
-        .modal-backdrop.show {
-            background-color: rgba(0, 0, 0, 0.7);
-        }
-        .modal-content {
-            border: none;
-            border-radius: 12px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-        }
-        .modal-header {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-            color: var(--text-color);
-            border: none;
-            border-radius: 12px 12px 0 0;
-        }
-        .modal-header .btn-close {
-            filter: invert(1);
-        }
-        .modal-body {
-            padding: 25px;
-        }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        .form-label {
-            font-weight: 600;
-            color: var(--primary-color);
-            margin-bottom: 8px;
-        }
-        .form-control,
-        .form-select {
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            padding: 10px 12px;
-            transition: border-color 0.2s;
-        }
-        .form-control:focus,
-        .form-select:focus {
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-        .modal-footer {
-            border-top: 1px solid #eee;
-            padding: 20px;
-        }
-        .btn-primary-custom {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: transform 0.2s;
-        }
-        .btn-primary-custom:hover {
-            transform: translateY(-2px);
-            color: white;
-        }
-        .btn-secondary-custom {
-            background: #e0e0e0;
-            color: #333;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 600;
-        }
-        .btn-secondary-custom:hover {
-            background: #d0d0d0;
-        }
-        .no-data {
-            text-align: center;
-            color: #95a5a6;
-            padding: 40px;
-        }
-    </style>
-</head>
-<body class="bg-light">
-    <div class="container py-4">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <div>
-                <h1>Administration des utilisateurs</h1>
-                <p class="text-muted">Créer des comptes, valider les demandes et gérer les gains et les pertes.</p>
-            </div>
-            <div>
-                <a href="index.php?route=admin/dashboard" class="btn btn-outline-secondary me-2">Retour au dashboard</a>
-                <a href="index.php?route=logout" class="btn btn-danger">Déconnexion</a>
-            </div>
-        </div>
-        <?php unset($_SESSION['success']); ?>
-
-    <?php if (isset($_SESSION['error'])): ?>
-        <div class="alert-container">
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <i class="bi bi-exclamation-circle"></i> <?= htmlspecialchars($_SESSION['error']) ?>
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-        </div>
-        <?php unset($_SESSION['error']); ?>
-    <?php endif; ?>
-
-    <div class="table-container">
-        <?php if (count($users) > 0): ?>
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Nom</th>
-                        <th>Email</th>
-                        <th>Classe</th>
-                        <th>Rôle</th>
-                        <th>Date d'inscription</th>
-                        <th>Statut</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($users as $user): ?>
-                        <tr>
-                            <td><strong>#<?= htmlspecialchars($user['id']) ?></strong></td>
-                            <td><?= htmlspecialchars($user['prenom'] . ' ' . $user['nom']) ?></td>
-                            <td><?= htmlspecialchars($user['email']) ?></td>
-                            <td>
-                                <span class="badge badge-class-<?= htmlspecialchars($user['classe']) ?>">
-                                    <?= ucfirst(htmlspecialchars($user['classe'])) ?>
-                                </span>
-                            </td>
-                            <td>
-                                <span class="badge badge-role-<?= htmlspecialchars($user['role']) ?>">
-                                    <?= ucfirst(htmlspecialchars($user['role'])) ?>
-                                </span>
-                            </td>
-                            <td><?= date('d/m/Y', strtotime($user['date_creation'])) ?></td>
-                            <td>
-                                <span class="badge badge-<?= ($user['is_active'] ? 'active' : 'inactive') ?>">
-                                    <?= ($user['is_active'] ? 'Actif' : 'Inactif') ?>
-                                </span>
-                            </td>
-                            <td>
-                                <div class="action-buttons">
-                                    <button class="btn-icon btn-edit" title="Modifier (bientôt)">
-                                        <i class="bi bi-pencil"></i>
-                                    </button>
-                                    <button class="btn-icon btn-delete" onclick="confirmDelete(<?= $user['id'] ?>)" title="Supprimer">
-                                        <i class="bi bi-trash"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
-        <?php else: ?>
-            <div class="no-data">
-                <i class="bi bi-inbox"></i>
-                <p>Aucun utilisateur trouvé</p>
-            </div>
-        <?php endif; ?>
+<div class="page-header d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 id="head" class="fw-bold mb-1">Listes des utilisateurs</h2>
+        <p class="text-muted mb-0">
+            <?= $classCounts['simple'] + $classCounts['gold'] + $classCounts['plus'] ?> utilisateur(s) au total
+        </p>
     </div>
+    <a href="index.php?route=admin/create-user" class="btn btn-primary d-flex justify-content-center align-items-center bolder">
+        <i class="bi bi-plus-lg"></i> Ajouter
+    </a>
 </div>
 
-<div class="modal fade" id="addUserModal" tabindex="-1" backdrop="static" keyboard="false">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title"><i class="bi bi-person-plus"></i> Ajouter un nouvel utilisateur</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <form method="POST" action="index.php?route=admin/create-user">
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label class="form-label">Prénom *</label>
-                        <input type="text" name="prenom" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Nom *</label>
-                        <input type="text" name="nom" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Email *</label>
-                        <input type="email" name="email" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Mot de passe *</label>
-                        <input type="password" name="password" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Classe</label>
-                        <select name="classe" class="form-select">
-                            <option value="simple">Simple</option>
-                            <option value="gold">Gold</option>
-                            <option value="plus">Plus</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Rôle</label>
-                        <select name="role" class="form-select">
-                            <option value="user">Utilisateur</option>
-                            <option value="admin">Administrateur</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn-secondary-custom" data-bs-dismiss="modal">Annuler</button>
-                    <button type="submit" class="btn-primary-custom">Créer Utilisateur</button>
-                </div>
-            </form>
-        </div>
-    </div>
+<?php if (isset($_SESSION['error'])): ?>
+        <div class="alert alert-danger"><?= htmlspecialchars($_SESSION['error']);
+        unset($_SESSION['error']); ?></div>
+<?php endif; ?>
+<?php if (isset($_SESSION['success'])): ?>
+        <div class="alert alert-success"><?= htmlspecialchars($_SESSION['success']);
+        unset($_SESSION['success']); ?></div>
+<?php endif; ?>
+
+<!-- Filtre par classe -->
+<div class="btn-group mb-4" role="group">
+    <a href="index.php?route=admin/users" class="btn btn-outline-secondary <?= empty($classeFilter) ? 'active' : '' ?>">
+        Tous (<?= $classCounts['simple'] + $classCounts['gold'] + $classCounts['plus'] ?>)
+    </a>
+    <a href="index.php?route=admin/users&classe=simple" class="btn btn-outline-secondary <?= $classeFilter === 'simple' ? 'active' : '' ?>">
+        Simple (<?= $classCounts['simple'] ?>)
+    </a>
+    <a href="index.php?route=admin/users&classe=gold" class="btn btn-outline-secondary <?= $classeFilter === 'gold' ? 'active' : '' ?>">
+        Gold (<?= $classCounts['gold'] ?>)
+    </a>
+    <a href="index.php?route=admin/users&classe=plus" class="btn btn-outline-secondary <?= $classeFilter === 'plus' ? 'active' : '' ?>">
+        Plus (<?= $classCounts['plus'] ?>)
+    </a>
 </div>
 
-<form id="deleteForm" method="POST" action="index.php?route=admin/delete-user" style="display:none;">
-    <input type="hidden" name="user_id" id="deleteUserId">
-</form>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-function confirmDelete(userId) {
-    if (confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ? Cette action est irréversible.')) {
-        document.getElementById('deleteUserId').value = userId;
-        document.getElementById('deleteForm').submit();
-    }
-}
-</script>
-
-</body>
-</html>
+<div class="card shadow-sm">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead>
+                <tr>
+                    <th class="text-center">Utilisateur</th>
+                    <th class="text-center">Email</th>
+                    <th class="text-center">Classe</th>
+                    <th class="text-center">Rôle</th>
+                    <th class="text-center">Statut</th>
+                    <th class="text-center">Inscrit le</th>
+                    <th class="text-center">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php if (empty($users)): ?>
+                        <tr><td colspan="7" class="text-center text-muted py-4">Aucun utilisateur trouvé.</td></tr>
+                <?php else: ?>
+                        <?php foreach ($users as $u): ?>
+                                <tr>
+                                    <td class="text-center"><?= htmlspecialchars($u['username']) ?></td>
+                                    <td class="text-center"><?= htmlspecialchars($u['email']) ?></td>
+                                    <td class="text-center">
+                                        <span class="class-badge class-<?= $u['classe'] ?>">
+                                            <?= ucfirst($u['classe']) ?>
+                                        </span>
+                                    </td>
+                                    <td class="text-center"><?= $u['role'] === 'admin' ? 'Admin' : 'Utilisateur' ?></td>
+                                    <td class="text-center">
+                                        <?php if ($u['is_active']): ?>
+                                                <span class="badge bg-success">Actif</span>
+                                        <?php else: ?>
+                                                <span class="badge bg-secondary">Désactivé</span>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td class="text-center"><?= date('d/m/Y', strtotime($u['created_at'])) ?></td>
+                                    <td class="text-center">
+                                        <a href="index.php?route=admin/edit-user&id=<?= $u['id'] ?>" class="me-2">
+                                           <i class="bi bi-pencil-square text-success"></i>
+                                        </a>
+                                        <?php if ($u['is_active'] && $u['id'] != $_SESSION['user_id']): ?>
+                                                <a href="index.php?route=admin/delete-user&id=<?= $u['id'] ?>">
+                                                    <i class="bi bi-slash-circle text-danger"></i>
+                                                </a>
+                                        <?php endif; ?>
+                                    </td>
+                                </tr>
+                        <?php endforeach; ?>
+                <?php endif; ?>
+            </tbody>
+        </table>
+    </div>
+</div>
