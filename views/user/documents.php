@@ -30,7 +30,7 @@
                             <td class="text-center"><?= date('d/m/Y', strtotime($f['created_at'])) ?></td>
                             <td class="text-center">
                                 <a href="index.php?route=download/facture&id=<?= $f['id'] ?>" class="btn btn-sm btn-primary bolder">
-                                    <i class="bi bi-download"></i> Télécharger
+                                    Télécharger
                                 </a>
                             </td>
                         </tr>
