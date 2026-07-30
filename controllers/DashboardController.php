@@ -75,8 +75,14 @@ class DashboardController
         if (!in_array($period, ['day', 'month', 'year'], true)) {
             $period = 'month';
         }
+
+        $registrationStats = $this->userModel->getRegistrationStats($period);
+
         header('Content-Type: application/json');
-        echo json_encode($this->userModel->getRegistrationStats($period));
+        echo json_encode([
+            'labels' => array_column($registrationStats, 'periode'),
+            'gains' => array_map('intval', array_column($registrationStats, 'total')),
+        ]);
         exit();
     }
 

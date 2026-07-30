@@ -40,8 +40,8 @@
                     </div>
 
                     <div class="d-flex justify-content-center">
-                        <button type="submit" class="btn btn-primary bolder w-100">
-                            <i class="bi bi-upload"></i> Envoyer
+                        <button type="submit" class="btn btn-primary bolder w-50">
+                            Envoyer
                         </button>
                     </div>
                 </form>

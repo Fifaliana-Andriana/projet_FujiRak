@@ -75,7 +75,7 @@
                                 </a>
                                 <?php if ($u['is_active'] && $u['id'] != $_SESSION['user_id']): ?>
                                     <a href="index.php?route=admin/delete-user&id=<?= $u['id'] ?>">
-                                        <i class="bi bi-slash-circle text-danger"></i>
+                                        <i class="bi bi-trash text-danger"></i>
                                     </a>
                                 <?php endif; ?>
                             </td>

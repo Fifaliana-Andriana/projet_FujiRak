@@ -42,12 +42,8 @@
         <h5 class="mb-0">Évolution financière</h5>
     </div>
     <div class="card-body">
-        <canvas
-            id="financeChart"
-            data-trend-chart
-            height="320"
-            data-endpoint="index.php?route=admin/stats-json"
-            data-initial='<?= json_encode($trend, JSON_HEX_APOS) ?>'>
+        <canvas id="financeChart" data-trend-chart data-endpoint="index.php?route=admin/stats-json"
+            data-initial='<?= json_encode($trend, JSON_HEX_APOS) ?>' data-label1="Gains" data-label2="Pertes">
         </canvas>
     </div>
 </div>
@@ -70,7 +66,9 @@
             </thead>
             <tbody>
                 <?php if (empty($lastTransactions)): ?>
-                    <tr><td colspan="5" class="text-center text-muted py-4">Aucune transaction pour le moment.</td></tr>
+                    <tr>
+                        <td colspan="5" class="text-center text-muted py-4">Aucune transaction pour le moment.</td>
+                    </tr>
                 <?php else: ?>
                     <?php foreach ($lastTransactions as $transaction): ?>
                         <tr>
@@ -79,7 +77,7 @@
                                 <?php if ($transaction['type'] === 'Gain'): ?>
                                     <span class="badge bg-success">Gain</span>
                                 <?php else: ?>
-                                    <span class="badge bg-danger">Perte</span>
+                                    <span class="badge" style="background: #7c1f25;">Perte</span>
                                 <?php endif; ?>
                             </td>
                             <td><?= htmlspecialchars($transaction['description'] ?? '') ?></td>

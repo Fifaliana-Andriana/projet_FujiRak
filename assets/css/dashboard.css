@@ -7,6 +7,7 @@
     padding: 15px;
     background: #f8f9fa;
     border-radius: 10px;
+    border: none;
     flex-wrap: wrap;
     gap: 15px;
 }
@@ -30,25 +31,29 @@
     display: flex;
     align-items: center;
     gap: 5px;
+    transition: 0.5s;
 }
 
 .btn-chart-type:hover,
 .btn-period:hover {
-    background: #f0f0f0;
-    transform: translateY(-2px);
+    background: #04a59d38;
+    transform: scale(1.01);
+    color: white;
+    font-weight: bolder;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
 .btn-chart-type.active,
 .btn-period.active {
-    background: #007bff;
+    background: #04a59d;
     color: white;
-    border-color: #007bff;
+    font-weight: bolder;
+    border: none;
 }
 
 .btn-chart-type.active:hover,
 .btn-period.active:hover {
-    background: #0056b3;
+    background: #04928b;
 }
 
 .chart-container {
@@ -99,7 +104,7 @@
 }
 
 .stat-card.pertes {
-    background: linear-gradient(135deg, #f093fb 0%, #C83F49 100%);
+    background: linear-gradient(135deg, #f093fb 0%, #7c1f25 100%);
 }
 
 .stat-card.solde {
@@ -183,10 +188,10 @@
 }
 
 .perte-card .card-icon {
-    background: #C83F49;
+    background: #7c1f25;
 }
 .perte-card .card-content h2 {
-    color: #C83F49;
+    color: #7c1f25;
 }
 
 .solde-card .card-icon {

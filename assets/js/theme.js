@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function applyTheme(isDark) {
     document.body.classList.toggle("theme-dark", isDark);
+
     if (icon) {
       icon.classList.toggle("bi-moon-fill", !isDark);
       icon.classList.toggle("bi-sun-fill", isDark);
@@ -16,13 +17,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // icone symbolique
     if (iconeToggledark) {
-      iconeToggledark.classList.toggle("d-none");
+      iconeToggledark.classList.toggle("d-none", !isDark);
     }
     if (iconeTogglelight) {
-      iconeTogglelight.classList.toggle("d-none");
+      iconeTogglelight.classList.toggle("d-none", isDark);
     }
     if (sidebarToggle) {
-      sidebarToggle.classList.toggle("text-white");
+      sidebarToggle.classList.toggle("light", isDark);
+      sidebarToggle.classList.toggle("dark", isDark);
     }
   }
 

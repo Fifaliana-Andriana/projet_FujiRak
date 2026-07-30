@@ -29,7 +29,7 @@ $trendData = array_map('intval', array_column($registrationStats, 'total'));
     </div>
     <div class="col-lg-3 col-md-6">
         <div class="dashboard-card">
-            <div class="card-icon" style="background:#FFD700;"><i class="bi bi-star-fill"></i></div>
+            <div class="card-icon" style="background:#FFD700;"><i class="bi bi-person"></i></div>
             <div class="card-content">
                 <small>Classe Gold</small>
                 <h2><?= $classCounts['gold'] ?></h2>
@@ -38,7 +38,9 @@ $trendData = array_map('intval', array_column($registrationStats, 'total'));
     </div>
     <div class="col-lg-3 col-md-6">
         <div class="dashboard-card">
-            <div class="card-icon" style="background:#FFD700;"><i class="bi bi-star-fill"></i></div>
+            <div class="card-icon" style="background:#FFD700;"><i class="bi bi-person"></i>
+                <p class="bolder">+</p>
+            </div>
             <div class="card-content">
                 <small>Classe Gold+</small>
                 <h2><?= $classCounts['plus'] ?></h2>
@@ -51,16 +53,13 @@ $trendData = array_map('intval', array_column($registrationStats, 'total'));
     <div class="card-header bg-white">
         <h5 class="mb-0">Évolution des inscriptions</h5>
     </div>
-    <div class="card-body">
-        <canvas
-            id="usersChart"
-            data-trend-chart
-            height="320"
+    <div class="card-body"><canvas id="usersChart" data-trend-chart data-single-series
             data-endpoint="index.php?route=admin/statistics-json"
-            data-initial='<?= json_encode(['labels' => $trendLabels, 'gains' => $trendData, 'pertes' => array_fill(0, count($trendData), 0)], JSON_HEX_APOS) ?>'>
+            data-initial='<?= json_encode(['labels' => $trendLabels, 'gains' => $trendData], JSON_HEX_APOS) ?>'
+            data-label1="Inscriptions">
         </canvas>
         <small class="text-muted d-block mt-3">
-            Le graphique compte les nouvelles inscriptions (les "pertes" sont affichées à zéro ; seule la série verte est pertinente ici).
+            Le graphique compte le nombre d'inscriptions.
         </small>
     </div>
 </div>

@@ -6,6 +6,13 @@
     --color-black: #000000;
 }
 
+.light{
+    color: var(--color-secondary);
+}
+.dark{
+    color: var(--color-primary);
+}
+
 .logocontainer{
     width: 100%;
     height: 30%;
@@ -46,7 +53,7 @@
     top: 2px;
     right: 8px;
     font-weight: bold;
-    color: #ff4500;
+    color: #7c1f25;
 }
 
 /* ==========================================================================
@@ -109,7 +116,7 @@
 /* Boutons "Annuler" / "Retour" : couleur grenade dédiée */
 .btn-cancel {
     border: none;
-    color: #C83F49;
+    color: #7c1f25;
 }
 .btn-cancel:hover {
     background: #b23640;

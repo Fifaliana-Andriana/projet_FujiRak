@@ -5,8 +5,8 @@
         <div class="container w-50 h100prc d-flex align-items-center justify-content-start">
             <!-- Bouton Sidebar -->
             <div class="toogleContainer d-flex justify-content-center align-items-center" style="width:10%">
-                <button id="sidebarToggle" class="btn btn-light border-0 me-3 text-center bg-transparent">
-                    <i class="bi bi-layout-sidebar lh-5"></i>
+                <button class="btn btn-light border-0 me-3 text-center bg-transparent">
+                    <i id="sidebarToggle" class="bi bi-layout-sidebar lh-5 light"></i>
                 </button>
             </div>
 
