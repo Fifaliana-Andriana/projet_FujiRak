@@ -1,7 +1,7 @@
 <div class="page-header mb-4">
     <div>
         <h2 class="fw-bold mb-1 d-flex align-items-center">
-           Bienvenue, <?= htmlspecialchars($_SESSION['username']) ?>
+            Bienvenue, <?= htmlspecialchars($_SESSION['username']) ?>
             <span class="class-badge class-<?= $classe ?> ms-2"><?= ucfirst($classe) ?></span>
         </h2>
     </div>
@@ -42,12 +42,8 @@
         <h5 class="mb-0">Évolution de mes finances</h5>
     </div>
     <div class="card-body">
-        <canvas
-            id="financeChart"
-            data-trend-chart
-            height="320"
-            data-endpoint="index.php?route=user/stats-json"
-            data-initial='<?= json_encode($trend, JSON_HEX_APOS) ?>'>
+        <canvas id="financeChart" data-trend-chart data-endpoint="index.php?route=user/stats-json"
+            data-initial='<?= json_encode($trend, JSON_HEX_APOS) ?>' data-label1="Gains" data-label2="Pertes">
         </canvas>
     </div>
 </div>
@@ -69,7 +65,9 @@
             </thead>
             <tbody>
                 <?php if (empty($transactions)): ?>
-                    <tr><td colspan="4" class="text-center text-muted py-4">Aucune transaction pour le moment.</td></tr>
+                    <tr>
+                        <td colspan="4" class="text-center text-muted py-4">Aucune transaction pour le moment.</td>
+                    </tr>
                 <?php else: ?>
                     <?php foreach ($transactions as $t): ?>
                         <tr>

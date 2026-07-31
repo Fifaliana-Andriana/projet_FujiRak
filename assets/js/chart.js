@@ -46,7 +46,7 @@ class TrendChart {
 
   buildControls(wrapperEl) {
     const controls = document.createElement("div");
-    controls.className = "chart-controls mb-3";
+    controls.className = "chart-controls mb-3 bg-transparent";
 
     const doughnutButton = this.singleSeries
       ? ""
