@@ -12,8 +12,8 @@
 
             <!-- Logo -->
             <div class="logoContainer d-flex justify-content-start align-items-center">
-                <img id="iconeTogglelight" src="assets/images/icons/iconelight.png" alt="Finixiias" width="70" class="">
-                <img id="iconeToggledark" src="assets/images/icons/iconedark.png" alt="Finixiias" width="70" class="d-none">
+                <img id="logoTogglelight" src="assets/images/logos/logolight.png" alt="Finixiias" width="160" class="">
+                <img id="logoToggledark" src="assets/images/logos/logodark.png" alt="Finixiias" width="160" class="d-none">
             </div>
         </div>
 

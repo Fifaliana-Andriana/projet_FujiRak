@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
   const toggleBtn = document.getElementById("themeToggle");
-  const iconeTogglelight = document.getElementById("iconeTogglelight");
-  const iconeToggledark = document.getElementById("iconeToggledark");
+  const logoTogglelight = document.getElementById("logoTogglelight");
+  const logoToggledark = document.getElementById("logoToggledark");
   const sidebarToggle = document.getElementById("sidebarToggle");
   if (!toggleBtn) return;
 
@@ -15,12 +15,11 @@ document.addEventListener("DOMContentLoaded", function () {
       icon.classList.toggle("bi-sun-fill", isDark);
     }
 
-    // icone symbolique
-    if (iconeToggledark) {
-      iconeToggledark.classList.toggle("d-none", !isDark);
+    if (logoToggledark) {
+      logoToggledark.classList.toggle("d-none", !isDark);
     }
-    if (iconeTogglelight) {
-      iconeTogglelight.classList.toggle("d-none", isDark);
+    if (logoTogglelight) {
+      logoTogglelight.classList.toggle("d-none", isDark);
     }
     if (sidebarToggle) {
       sidebarToggle.classList.toggle("light", isDark);

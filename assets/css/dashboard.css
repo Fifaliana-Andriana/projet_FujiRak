@@ -18,44 +18,6 @@
     gap: 10px;
 }
 
-.btn-chart-type,
-.btn-period {
-    padding: 10px 20px;
-    border: 2px solid #ddd;
-    background: white;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 500;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    transition: 0.5s;
-}
-
-.btn-chart-type:hover,
-.btn-period:hover {
-    background: #04a59d38;
-    transform: scale(1.01);
-    color: white;
-    font-weight: bolder;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
-
-.btn-chart-type.active,
-.btn-period.active {
-    background: #04a59d;
-    color: white;
-    font-weight: bolder;
-    border: none;
-}
-
-.btn-chart-type.active:hover,
-.btn-period.active:hover {
-    background: #04928b;
-}
-
 .chart-container {
     position: relative;
     height: 400px;

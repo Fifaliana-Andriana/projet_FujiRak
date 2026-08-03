@@ -1,59 +1,93 @@
-
 :root {
-    --color-primary: #04a59d;
-    --color-secondary: #171717;
-    --color-white: #ffffff;
-    --color-black: #000000;
+  --color-primary: #04a59d;
+  --color-secondary: #171717;
+  --color-white: #ffffff;
+  --color-black: #000000;
 }
 
-.light{
-    color: var(--color-secondary);
+.light {
+  color: var(--color-secondary);
 }
-.dark{
-    color: var(--color-primary);
+.dark {
+  color: var(--color-primary);
 }
 
-.logocontainer{
-    width: 100%;
-    height: 30%;
+.logocontainer {
+  width: 100%;
+  height: 30%;
 }
-.logo{
-    width: 100%;
+.logo {
+  width: 100%;
 }
-.hidden{
-    width: 49%;
-    overflow: hidden;
+.hidden {
+  width: 49%;
+  overflow: hidden;
 }
-.bi{
-    font-size: 40px;
+.bi {
+  font-size: 40px;
 }
 /* ==========================================================================
    Badges de classe utilisateur (simple / gold / plus)
    ========================================================================== */
 
 .class-badge {
-    display: inline-block;
-    padding: 4px 14px;
-    border-radius: 20px;
-    font-weight: bold;
-    font-size: 13px;
+  display: inline-block;
+  padding: 4px 14px;
+  border-radius: 20px;
+  font-weight: bold;
+  font-size: 13px;
 }
 
-.class-simple { background: silver; color: #333; }
-.class-gold { background: gold; color: #333; }
-.class-plus {
-    background: gold;
-    color: #333;
-    position: relative;
-    padding-right: 22px;
+.class-simple {
+  background: linear-gradient(
+    135deg,
+    #c0c0c0 0%,
+    #f5f5f5 45%,
+    #a8a8a8 55%,
+    #eeeeee 75%,
+    #8e8e8e 100%
+  );
+  color: #2a2a2a;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6);
+  box-shadow: 0 2px 6px rgba(120, 120, 120, 0.4);
 }
+.class-gold {
+  background: linear-gradient(
+    135deg,
+    #bf953f 0%,
+    #fcf6ba 45%,
+    #b38728 55%,
+    #fbf5b7 75%,
+    #aa771c 100%
+  );
+  color: #3a2a0a;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.4);
+  box-shadow: 0 2px 6px rgba(179, 135, 40, 0.4);
+}
+
+.class-plus {
+  background: linear-gradient(
+    135deg,
+    #bf953f 0%,
+    #fcf6ba 45%,
+    #b38728 55%,
+    #fbf5b7 75%,
+    #aa771c 100%
+  );
+  color: #3a2a0a;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.4);
+  box-shadow: 0 2px 6px rgba(179, 135, 40, 0.4);
+  position: relative;
+  padding-right: 22px;
+}
+
 .class-plus::after {
-    content: '+';
-    position: absolute;
-    top: 2px;
-    right: 8px;
-    font-weight: bold;
-    color: #7c1f25;
+  content: "+";
+  position: absolute;
+  top: 2px;
+  right: 8px;
+  font-weight: bold;
+  color: #7c1f25;
 }
 
 /* ==========================================================================
@@ -61,41 +95,40 @@
    ========================================================================== */
 
 .chart-controls {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 10px;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
 }
-
-.chart-type-buttons,
 .period-buttons {
-    display: inline-flex;
-    border-radius: 8px;
-    overflow: hidden;
-    border: 1px solid #e0e0e0;
+  display: inline-flex;
+  gap: 4px;
 }
 
-.btn-chart-type,
 .btn-period {
-    background: white;
-    border: none;
-    padding: 6px 14px;
-    font-size: 13px;
-    color: #555;
-    cursor: pointer;
-    transition: background 0.2s, color 0.2s;
-    border-right: 1px solid #e0e0e0;
+  background: transparent;
+  border: none;
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #888888;
+  cursor: pointer;
 }
-.btn-chart-type:last-child,
-.btn-period:last-child { border-right: none; }
 
-.btn-chart-type:hover,
-.btn-period:hover { background: #f0f0f0; }
-
-.btn-chart-type.active,
+/* Mode clair : actif en noir + gras */
 .btn-period.active {
-    background: var(--color-primary, #04a59d);
-    color: white;
+  color: black;
+  font-weight: bolder;
+}
+
+/* Mode sombre : texte gris par défaut, actif en blanc + gras, pas de hover */
+body.theme-dark .btn-period {
+  color: #9a9a9a;
+}
+
+body.theme-dark .btn-period.active {
+  color: white;
+  font-weight: bolder;
 }
 
 /* ==========================================================================
@@ -103,25 +136,27 @@
    ========================================================================== */
 
 .btn-primary {
-    background: linear-gradient(135deg, #04a59d 0%, #16213e 100%);
-    border: none;
-    color: white;
+  background: linear-gradient(135deg, #04a59d 0%, #16213e 100%);
+  border: none;
+  color: white;
 }
 .btn-primary:hover {
-    background: linear-gradient(135deg, #038a83 0%, #11192e 100%);
-    color: white;
+  background: linear-gradient(135deg, #038a83 0%, #11192e 100%);
+  color: white;
 }
-.link-teal { color: var(--color-primary, #04a59d); }
+.link-teal {
+  color: var(--color-primary, #04a59d);
+}
 
 /* Boutons "Annuler" / "Retour" : couleur grenade dédiée */
 .btn-cancel {
-    border: none;
-    color: #7c1f25;
+  border: none;
+  color: #7c1f25;
 }
 .btn-cancel:hover {
-    background: #b23640;
-    color: white;
-    font-weight: bolder;
+  background: #b23640;
+  color: white;
+  font-weight: bolder;
 }
 
 /* ==========================================================================
@@ -129,21 +164,21 @@
    ========================================================================== */
 
 body.theme-dark {
-    background: #1e1e1e;
-    color: #e0e0e0;
+  background: #1e1e1e;
+  color: #e0e0e0;
 }
 
 /* Cartes, navbar */
 body.theme-dark .card,
 body.theme-dark .dashboard-card,
 body.theme-dark .navbar {
-    background: #2a2a2a !important;
-    color: #e0e0e0;
+  background: #2a2a2a !important;
+  color: #e0e0e0;
 }
 body.theme-dark .card-header {
-    background: #2a2a2a !important;
-    border-color: #3a3a3a;
-    color: #e0e0e0;
+  background: #2a2a2a !important;
+  border-color: #3a3a3a;
+  color: #e0e0e0;
 }
 
 /* Titres et textes */
@@ -157,63 +192,62 @@ body.theme-dark .page-header h2,
 body.theme-dark label,
 body.theme-dark dt,
 body.theme-dark dd {
-    color: #e0e0e0 !important;
+  color: #e0e0e0 !important;
 }
 body.theme-dark .text-muted {
-    color: #9a9a9a !important;
+  color: #9a9a9a !important;
 }
 
 /* Tableaux */
 body.theme-dark .table {
-    color: #e0e0e0;
-    --bs-table-color: #e0e0e0;
-    --bs-table-bg: transparent;
+  color: #e0e0e0;
+  --bs-table-color: #e0e0e0;
+  --bs-table-bg: transparent;
 }
 body.theme-dark .table thead th {
-    background: #2a2a2a;
-    color: #e0e0e0;
-    border-color: #3a3a3a;
+  background: #2a2a2a;
+  color: #e0e0e0;
+  border-color: #3a3a3a;
 }
 body.theme-dark .table td,
 body.theme-dark .table th {
-    border-color: #3a3a3a;
+  border-color: #3a3a3a;
 }
 body.theme-dark .table-hover > tbody > tr:hover > * {
-    background: #333333;
-    color: #e0e0e0;
+  background: #333333;
+  color: #e0e0e0;
 }
 body.theme-dark .table-striped > tbody > tr:nth-of-type(odd) > * {
-    background: #262626;
-    color: #e0e0e0;
+  background: #262626;
+  color: #e0e0e0;
 }
 
 /* Formulaires */
 body.theme-dark .form-control,
 body.theme-dark .form-select {
-    background: #2a2a2a;
-    color: #e0e0e0;
-    border-color: #3a3a3a;
+  background: #2a2a2a;
+  color: #e0e0e0;
+  border-color: #3a3a3a;
 }
 body.theme-dark .form-control:focus,
 body.theme-dark .form-select:focus {
-    background: #2a2a2a;
-    color: #e0e0e0;
-    border-color: var(--color-primary, #04a59d);
+  background: #2a2a2a;
+  color: #e0e0e0;
+  border-color: var(--color-primary, #04a59d);
 }
 body.theme-dark .form-control::placeholder {
-    color: #888888;
+  color: #888888;
 }
 
 /* Modals */
 body.theme-dark .modal-content {
-    background: #2a2a2a;
-    color: #e0e0e0;
+  background: #2a2a2a;
+  color: #e0e0e0;
 }
 body.theme-dark .modal-header,
 body.theme-dark .modal-footer {
-    border-color: #3a3a3a;
+  border-color: #3a3a3a;
 }
-
 
 /* ==========================================================================
    Conteneur de graphique : hauteur FIXE obligatoire pour Chart.js responsive
@@ -221,18 +255,185 @@ body.theme-dark .modal-footer {
    ========================================================================== */
 
 .chart-canvas-wrapper {
-    position: relative;
-    height: 320px;
-    width: 100%;
+  position: relative;
+  height: 320px;
+  width: 100%;
 }
 
 .chart-canvas-wrapper canvas {
-    width: 100% !important;
-    height: 100% !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+.chart-dashboard-body {
+  display: flex;
+  gap: 20px;
+  align-items: stretch;
+  flex-wrap: wrap;
+}
+
+.chart-main-panel {
+  flex: 2;
+  min-width: 280px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.chart-sub-block {
+  width: 100%;
+}
+
+.chart-canvas-wrapper-sm {
+  height: 220px;
+}
+
+.chart-main-panel .chart-canvas-wrapper {
+  height: 280px;
+}
+
+.chart-side-panel {
+  flex: 1;
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.chart-doughnut-wrap {
+  position: relative;
+  width: 180px;
+  height: 180px;
+}
+
+.chart-doughnut-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 24px;
+  font-weight: bold;
+  color: var(--color-secondary, #171717);
+}
+
+.chart-mini-legend {
+  list-style: none;
+  padding: 0;
+  margin-top: 16px;
+  width: 100%;
+}
+.chart-mini-legend li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+  font-size: 14px;
+  color: #555;
+}
+
+.chart-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.chart-dot-gain {
+  background: #28a745;
+}
+.chart-dot-perte {
+  background: #c83f49;
+}
+
+body.theme-dark .chart-doughnut-center {
+  color: #e0e0e0;
+}
+body.theme-dark .chart-mini-legend li {
+  color: #cccccc;
+}
+
+/* ==========================================================================
+   Dashboard utilisateur : cartes + badge de classe, responsive
+   ========================================================================== */
+
+.dashboard-top-row {
+  display: flex;
+  gap: 20px;
+  align-items: stretch;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+
+.dashboard-cards-col {
+  flex: 4;
+  min-width: 280px;
+}
+
+.dashboard-class-col {
+  flex: 1;
+  min-width: 160px;
+}
+
+@media (max-width: 768px) {
+  .dashboard-cards-col,
+  .dashboard-class-col {
+    flex: 1 1 100%;
+  }
+}
+
+/* Le badge devient un vrai bloc dans ce contexte (pas juste une pastille de tableau) */
+.dashboard-class-col .class-badge {
+  padding: 20px;
+  border-radius: 14px;
+  font-size: 16px;
+  gap: 10px;
+}
+.dashboard-class-col .card-icon {
+  font-size: 22px;
+}
+.dashboard-class-col .card-content p {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+/* ==========================================================================
+   Animation de brillance sur le badge de classe (simple/gold/plus)
+   ========================================================================== */
+
+.class-badge {
+  position: relative;
+  overflow: hidden;
+}
+
+.class-badge::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -150%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.75) 50%,
+    transparent 100%
+  );
+  animation: badge-shine 3.5s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes badge-shine {
+  0% {
+    left: -150%;
+  }
+  55% {
+    left: 150%;
+  }
+  100% {
+    left: 150%;
+  }
 }
 
 @media (max-width: 576px) {
-    .chart-canvas-wrapper {
-        height: 260px;
-    }
+  .chart-canvas-wrapper {
+    height: 260px;
+  }
 }

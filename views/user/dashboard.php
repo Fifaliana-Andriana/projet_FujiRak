@@ -2,39 +2,53 @@
     <div>
         <h2 class="fw-bold mb-1 d-flex align-items-center">
             Bienvenue, <?= htmlspecialchars($_SESSION['username']) ?>
-            <span class="class-badge class-<?= $classe ?> ms-2"><?= ucfirst($classe) ?></span>
         </h2>
     </div>
 </div>
 
-<div class="row g-4 mb-5">
-    <div class="col-lg-4">
-        <div class="dashboard-card gain-card">
-            <div class="card-icon"><i class="bi bi-graph-up-arrow"></i></div>
-            <div class="card-content">
-                <small>Total des gains</small>
-                <h2><?= number_format($totals['gains'], 2, ',', ' ') ?> €</h2>
+<div class="dashboard-top-row">
+
+    <div class="dashboard-cards-col">
+        <div class="row g-3">
+            <div class="col-sm-6 col-lg-4">
+                <div class="dashboard-card gain-card">
+                    <div class="card-icon"><i class="bi bi-graph-up-arrow"></i></div>
+                    <div class="card-content">
+                        <small>Total des gains</small>
+                        <h2><?= number_format($totals['gains'], 2, ',', ' ') ?> €</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-lg-4">
+                <div class="dashboard-card perte-card">
+                    <div class="card-icon"><i class="bi bi-graph-down-arrow"></i></div>
+                    <div class="card-content">
+                        <small>Total des pertes</small>
+                        <h2><?= number_format($totals['pertes'], 2, ',', ' ') ?> €</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-lg-4">
+                <div class="dashboard-card solde-card">
+                    <div class="card-icon"><i class="bi bi-wallet2"></i></div>
+                    <div class="card-content">
+                        <small>Mon solde</small>
+                        <h2><?= number_format($totals['solde'], 2, ',', ' ') ?> €</h2>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-    <div class="col-lg-4">
-        <div class="dashboard-card perte-card">
-            <div class="card-icon"><i class="bi bi-graph-down-arrow"></i></div>
+
+    <div class="dashboard-class-col">
+        <div class="class-badge class-<?= $classe ?> w-100 h-100 d-flex justify-content-evenly align-items-center">
+            <div class="card-icon"><i class="bi bi-person"></i></div>
             <div class="card-content">
-                <small>Total des pertes</small>
-                <h2><?= number_format($totals['pertes'], 2, ',', ' ') ?> €</h2>
+                <p class="mb-0"><?= ucfirst($classe) ?></p>
             </div>
         </div>
     </div>
-    <div class="col-lg-4">
-        <div class="dashboard-card solde-card">
-            <div class="card-icon"><i class="bi bi-wallet2"></i></div>
-            <div class="card-content">
-                <small>Mon solde</small>
-                <h2><?= number_format($totals['solde'], 2, ',', ' ') ?> €</h2>
-            </div>
-        </div>
-    </div>
+
 </div>
 
 <div class="card shadow-sm mb-5">

@@ -1,13 +1,8 @@
 /**
- * TrendChart : graphique dans le temps, avec :
- *  - jusqu'à 3 modes d'affichage : barres / courbe / circulaire (circulaire masqué si singleSeries)
- *  - filtre par période : jour / mois / année (refetch AJAX vers `endpoint`)
- *
- * Utilisation :
- *   new TrendChart('financeChart', initialData, 'index.php?route=admin/stats-json', 'Gains', 'Pertes');
- *   new TrendChart('usersChart', initialData, 'index.php?route=admin/statistics-json', 'Inscriptions', null, true);
- *
- * `initialData` = { labels: [...], gains: [...], pertes: [...] }  (pertes optionnel si singleSeries)
+ * TrendChart : tableau de bord de graphique, affichage permanent, sans choix de vue.
+ *  - Barres + Courbe : toujours affichés (deux séries ou une seule)
+ *  - Circulaire avec pourcentage au centre : affiché uniquement si 2 séries (masqué si singleSeries)
+ *  - Filtre par période : jour / mois / année (refetch AJAX vers `endpoint`)
  */
 class TrendChart {
   constructor(
@@ -18,77 +13,69 @@ class TrendChart {
     label2 = null,
     singleSeries = false,
   ) {
-    this.canvasId = canvasId;
+    this.baseId = canvasId;
     this.data = initialData;
     this.endpoint = endpoint;
-    this.chartType = "bar";
     this.period = "month";
-    this.chart = null;
+    this.barChart = null;
+    this.lineChart = null;
+    this.doughnutChart = null;
     this.label1 = label1;
     this.label2 = label2;
-    this.singleSeries = singleSeries;
+    this.singleSeries = singleSeries || !label2;
   }
 
   init() {
-    const canvas = document.getElementById(this.canvasId);
-    if (!canvas) return;
+    const originalCanvas = document.getElementById(this.baseId);
+    if (!originalCanvas) return;
 
-    // Empêche la boucle de redimensionnement infinie de Chart.js :
-    // le canvas responsive a besoin d'un parent à hauteur FIXE.
-    const wrapper = document.createElement("div");
-    wrapper.className = "chart-canvas-wrapper";
-    canvas.parentNode.insertBefore(wrapper, canvas);
-    wrapper.appendChild(canvas);
+    const container = document.createElement("div");
+    container.className = "chart-dashboard";
 
-    this.buildControls(wrapper);
-    this.render();
-  }
-
-  buildControls(wrapperEl) {
-    const controls = document.createElement("div");
-    controls.className = "chart-controls mb-3 bg-transparent";
-
-    const doughnutButton = this.singleSeries
-      ? ""
-      : `
-            <button class="btn-chart-type border-0" data-type="doughnut">
-                <i class="bi bi-pie-chart-fill"></i> Circulaire
-            </button>
+    container.innerHTML = `
+            <div class="chart-period-bar">
+                <div class="period-buttons d-flex justify-content-end gap-2">
+                    <button class="btn-period" data-period="day">Jour</button>
+                    <button class="btn-period active" data-period="month">Mois</button>
+                    <button class="btn-period" data-period="year">Année</button>
+                </div>
+            </div>
+            <div class="chart-dashboard-body">
+                <div class="chart-main-panel">
+                    <div class="chart-sub-block">
+                        <div class="chart-canvas-wrapper chart-canvas-wrapper-sm">
+                            <canvas id="${this.baseId}-bar"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-sub-block">
+                        <div class="chart-canvas-wrapper chart-canvas-wrapper-sm">
+                            <canvas id="${this.baseId}-line"></canvas>
+                        </div>
+                    </div>
+                </div>
+                ${
+                  this.singleSeries
+                    ? ""
+                    : `
+                <div class="chart-side-panel">
+                    <div class="chart-doughnut-wrap">
+                        <canvas id="${this.baseId}-doughnut"></canvas>
+                        <div class="chart-doughnut-center" id="${this.baseId}-percent">0%</div>
+                    </div>
+                    <ul class="chart-mini-legend">
+                        <li><span class="chart-dot chart-dot-gain"></span> ${this.label1}</li>
+                        <li><span class="chart-dot chart-dot-perte"></span> ${this.label2}</li>
+                    </ul>
+                </div>`
+                }
+            </div>
         `;
 
-    controls.innerHTML = `
-            <div class="chart-type-buttons border-0">
-                <button class="btn-chart-type border-0 active" data-type="bar">
-                    <i class="bi bi-bar-chart-fill"></i> Barres
-                </button>
-                <button class="btn-chart-type border-0" data-type="line">
-                    <i class="bi bi-graph-up"></i> Courbe
-                </button>
-                ${doughnutButton}
-            </div>
-            <div class="period-buttons border-0">
-                <button class="btn-period border-0" data-period="day">Jour</button>
-                <button class="btn-period border-0 active" data-period="month">Mois</button>
-                <button class="btn-period border-0" data-period="year">Année</button>
-            </div>
-        `;
+    originalCanvas.parentNode.replaceChild(container, originalCanvas);
 
-    wrapperEl.parentNode.insertBefore(controls, wrapperEl);
-
-    controls.querySelectorAll(".btn-chart-type").forEach((btn) => {
+    container.querySelectorAll(".btn-period").forEach((btn) => {
       btn.addEventListener("click", () => {
-        controls
-          .querySelectorAll(".btn-chart-type")
-          .forEach((b) => b.classList.remove("active"));
-        btn.classList.add("active");
-        this.chartType = btn.dataset.type;
-        this.render();
-      });
-    });
-
-    controls.querySelectorAll(".btn-period").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        controls
+        container
           .querySelectorAll(".btn-period")
           .forEach((b) => b.classList.remove("active"));
         btn.classList.add("active");
@@ -96,6 +83,8 @@ class TrendChart {
         this.fetchAndRender();
       });
     });
+
+    this.render();
   }
 
   async fetchAndRender() {
@@ -116,68 +105,126 @@ class TrendChart {
   }
 
   render() {
-    const ctx = document.getElementById(this.canvasId);
-    if (!ctx) return;
+    this.renderBar();
+    this.renderLine();
+    if (!this.singleSeries) {
+      this.renderDoughnut();
+    }
+  }
 
-    if (this.chart) {
-      this.chart.destroy();
+  buildDatasets(styleType) {
+    const isLine = styleType === "line";
+
+    const datasets = [
+      {
+        label: this.label1,
+        data: this.data.gains,
+        backgroundColor: isLine
+          ? "rgba(40, 167, 69, 0.15)"
+          : "rgba(40, 167, 69, 0.75)",
+        borderColor: "#28a745",
+        borderWidth: 2,
+        borderRadius: isLine ? 0 : 6,
+        tension: 0.4,
+        fill: isLine,
+      },
+    ];
+
+    if (!this.singleSeries) {
+      datasets.push({
+        label: this.label2,
+        data: this.data.pertes || [],
+        backgroundColor: isLine
+          ? "rgba(200, 63, 73, 0.15)"
+          : "rgba(200, 63, 73, 0.75)",
+        borderColor: "#C83F49",
+        borderWidth: 2,
+        borderRadius: isLine ? 0 : 6,
+        tension: 0.4,
+        fill: isLine,
+      });
     }
 
-    const isCircular = this.chartType === "doughnut";
+    return datasets;
+  }
+
+  renderBar() {
+    const ctx = document.getElementById(`${this.baseId}-bar`);
+    if (!ctx) return;
+
+    if (this.barChart) {
+      this.barChart.destroy();
+    }
+
+    this.barChart = new Chart(ctx, {
+      type: "bar",
+      data: { labels: this.data.labels, datasets: this.buildDatasets("bar") },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: this.singleSeries } },
+        scales: { y: { beginAtZero: true } },
+      },
+    });
+  }
+
+  renderLine() {
+    const ctx = document.getElementById(`${this.baseId}-line`);
+    if (!ctx) return;
+
+    if (this.lineChart) {
+      this.lineChart.destroy();
+    }
+
+    this.lineChart = new Chart(ctx, {
+      type: "line",
+      data: { labels: this.data.labels, datasets: this.buildDatasets("line") },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: this.singleSeries } },
+        scales: { y: { beginAtZero: true } },
+      },
+    });
+  }
+
+  renderDoughnut() {
+    const ctx = document.getElementById(`${this.baseId}-doughnut`);
+    if (!ctx) return;
+
+    if (this.doughnutChart) {
+      this.doughnutChart.destroy();
+    }
 
     const totalGains = this.data.gains.reduce((a, b) => a + b, 0);
     const totalPertes = (this.data.pertes || []).reduce((a, b) => a + b, 0);
+    const total = totalGains + totalPertes;
+    const percent = total > 0 ? Math.round((totalGains / total) * 100) : 0;
 
-    const config = isCircular
-      ? {
-          type: "doughnut",
-          data: {
-            labels: [this.label1, this.label2],
-            datasets: [
-              {
-                data: [totalGains, totalPertes],
-                backgroundColor: ["#28a745", "#7c1f25"],
-              },
-            ],
-          },
-          options: { responsive: true, maintainAspectRatio: false },
-        }
-      : {
-          type: this.chartType,
-          data: {
-            labels: this.data.labels,
-            datasets: [
-              {
-                label: this.label1,
-                data: this.data.gains,
-                backgroundColor: "rgba(40, 167, 69, 0.7)",
-                border: "none",
-                borderWidth: 2,
-                tension: 0.4,
-              },
-              ...(this.label2
-                ? [
-                    {
-                      label: this.label2,
-                      data: this.data.pertes || [],
-                      backgroundColor: "#7c1f25",
-                      border: "none",
-                      borderWidth: 2,
-                      tension: 0.4,
-                    },
-                  ]
-                : []),
-            ],
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: { legend: { display: !this.singleSeries } },
-            scales: { y: { beginAtZero: true } },
-          },
-        };
+    const percentEl = document.getElementById(`${this.baseId}-percent`);
+    if (percentEl) {
+      percentEl.textContent = `${percent}%`;
+    }
 
-    this.chart = new Chart(ctx, config);
+    this.doughnutChart = new Chart(ctx, {
+      type: "doughnut",
+      data: {
+        labels: [this.label1, this.label2],
+        datasets: [
+          {
+            data: [totalGains, totalPertes],
+            backgroundColor: ["#28a745", "#C83F49"],
+            borderWidth: 0,
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: "70%",
+        plugins: { legend: { display: false } },
+      },
+    });
   }
 }
 
