@@ -120,9 +120,9 @@ class TrendChart {
         label: this.label1,
         data: this.data.gains,
         backgroundColor: isLine
-          ? "rgba(40, 167, 69, 0.15)"
-          : "rgba(40, 167, 69, 0.75)",
-        borderColor: "#28a745",
+          ? "rgba(4, 146, 165, 0.15)"
+          : "rgba(4, 146, 165, 0.75)",
+        borderColor: "#0492a5",
         borderWidth: 2,
         borderRadius: isLine ? 0 : 6,
         tension: 0.4,
@@ -135,9 +135,9 @@ class TrendChart {
         label: this.label2,
         data: this.data.pertes || [],
         backgroundColor: isLine
-          ? "rgba(200, 63, 73, 0.15)"
-          : "rgba(200, 63, 73, 0.75)",
-        borderColor: "#C83F49",
+          ? "rgba(124, 31, 37, 0.15)"
+          : "rgba(124, 31, 37, 0.75)",
+        borderColor: "#7c1f25",
         borderWidth: 2,
         borderRadius: isLine ? 0 : 6,
         tension: 0.4,
@@ -213,7 +213,7 @@ class TrendChart {
         datasets: [
           {
             data: [totalGains, totalPertes],
-            backgroundColor: ["#28a745", "#C83F49"],
+            backgroundColor: ["#0492a5", "#7c1f25"],
             borderWidth: 0,
           },
         ],

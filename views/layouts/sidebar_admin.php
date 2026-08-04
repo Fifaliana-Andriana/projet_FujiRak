@@ -5,7 +5,7 @@
     <a href="index.php?route=admin/dashboard"
        class="sidebar-link <?= $currentRoute === 'admin/dashboard' ? 'active' : 'bolder' ?>">
         <i class="bi bi-house-door"></i>
-        <span>Accueil</span>
+        <span>Tableau de bord</span>
     </a>
 
     <a href="index.php?route=admin/statistics"

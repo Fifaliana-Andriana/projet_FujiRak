@@ -2,6 +2,28 @@
 <html lang="fr">
 
 <head>
+    <script>
+        (function () {
+            try {
+                var savedTheme = localStorage.getItem('finixiias-theme');
+                if (savedTheme === 'dark') {
+                    document.documentElement.classList.add('theme-dark');
+                }
+            } catch (e) { }
+        })();
+    </script>
+
+    <script>
+        (function () {
+            try {
+                var collapsed = localStorage.getItem('sidebarCollapsed');
+                if (collapsed === '1' || (collapsed === null && window.innerWidth <= 768)) {
+                    document.documentElement.classList.add('sidebar-collapsed-init');
+                }
+            } catch (e) { }
+        })();
+    </script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 

@@ -66,7 +66,7 @@
 
         .icon{
             font-size:60px;
-            color:#dc3545;
+            color:#7c1f25;
             margin-bottom:20px;
         }
     </style>

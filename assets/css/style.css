@@ -3,6 +3,89 @@
   --color-secondary: #171717;
   --color-white: #ffffff;
   --color-black: #000000;
+
+  /* Remplace toutes les teintes "vert" (succès, gains, ...) du projet */
+  --color-blue: #0492a5;
+  --color-blue-rgb: 4, 146, 165;
+  --color-blue-hover: #037985;
+
+  /* Remplace toutes les teintes "rouge" (danger, pertes, ...) du projet */
+  --color-grenat: #7c1f25;
+  --color-grenat-rgb: 124, 31, 37;
+  --color-grenat-hover: #b23640;
+}
+
+/* ==========================================================================
+   Remplacement global vert -> bleu / rouge -> grenat pour les classes
+   utilitaires Bootstrap (badges, textes, boutons, alertes)
+   ========================================================================== */
+
+.text-success {
+  color: var(--color-blue) !important;
+}
+.bg-success {
+  background-color: var(--color-blue) !important;
+}
+.border-success {
+  border-color: var(--color-blue) !important;
+}
+
+.text-danger {
+  color: var(--color-grenat) !important;
+}
+.bg-danger {
+  background-color: var(--color-grenat) !important;
+}
+.border-danger {
+  border-color: var(--color-grenat) !important;
+}
+
+.btn-success {
+  --bs-btn-color: #fff;
+  --bs-btn-bg: var(--color-blue);
+  --bs-btn-border-color: var(--color-blue);
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: var(--color-blue-hover);
+  --bs-btn-hover-border-color: var(--color-blue-hover);
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: var(--color-blue-hover);
+  --bs-btn-active-border-color: var(--color-blue-hover);
+  --bs-btn-focus-shadow-rgb: var(--color-blue-rgb);
+  --bs-btn-disabled-bg: var(--color-blue);
+  --bs-btn-disabled-border-color: var(--color-blue);
+}
+
+.btn-danger {
+  --bs-btn-color: #fff;
+  --bs-btn-bg: var(--color-grenat);
+  --bs-btn-border-color: var(--color-grenat);
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: var(--color-grenat-hover);
+  --bs-btn-hover-border-color: var(--color-grenat-hover);
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: var(--color-grenat-hover);
+  --bs-btn-active-border-color: var(--color-grenat-hover);
+  --bs-btn-focus-shadow-rgb: var(--color-grenat-rgb);
+  --bs-btn-disabled-bg: var(--color-grenat);
+  --bs-btn-disabled-border-color: var(--color-grenat);
+}
+
+.alert-success {
+  --bs-alert-color: #023840;
+  --bs-alert-bg: rgba(var(--color-blue-rgb), 0.12);
+  --bs-alert-border-color: rgba(var(--color-blue-rgb), 0.35);
+}
+.alert-danger {
+  --bs-alert-color: #4a1116;
+  --bs-alert-bg: rgba(var(--color-grenat-rgb), 0.12);
+  --bs-alert-border-color: rgba(var(--color-grenat-rgb), 0.35);
+}
+
+html.theme-dark .alert-success {
+  --bs-alert-color: #8fd9e0;
+}
+html.theme-dark .alert-danger {
+  --bs-alert-color: #e8a6ac;
 }
 
 .light {
@@ -10,6 +93,26 @@
 }
 .dark {
   color: var(--color-primary);
+}
+
+/* ==========================================================================
+   Carte de formulaire centrée (création/modification d'utilisateur, etc.)
+   Largeur confortable en desktop, pleine largeur en mobile/tablette.
+   ========================================================================== */
+.form-card-body {
+  width: 50%;
+}
+
+@media (max-width: 992px) {
+  .form-card-body {
+    width: 80%;
+  }
+}
+
+@media (max-width: 768px) {
+  .form-card-body {
+    width: 100%;
+  }
 }
 
 .logocontainer {
@@ -122,11 +225,11 @@
 }
 
 /* Mode sombre : texte gris par défaut, actif en blanc + gras, pas de hover */
-body.theme-dark .btn-period {
+html.theme-dark .btn-period {
   color: #9a9a9a;
 }
 
-body.theme-dark .btn-period.active {
+html.theme-dark .btn-period.active {
   color: white;
   font-weight: bolder;
 }
@@ -160,92 +263,124 @@ body.theme-dark .btn-period.active {
 }
 
 /* ==========================================================================
+   Séparateurs de lignes dans les tableaux (mode clair + mode sombre)
+   ========================================================================== */
+.table > :not(caption) > * > * {
+  border-bottom: 1px solid #e2e2e2;
+}
+
+html.theme-dark .table > :not(caption) > * > * {
+  border-bottom: 1px solid #3a3a3a;
+}
+
+/* Séparateur "jour" entre deux groupes de transactions (aujourd'hui / hier / ...) */
+.table-day-separator td {
+  padding: 10px 12px !important;
+  font-size: 12px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #888888;
+  background: #f4f4f4;
+  border-top: 2px solid #d8d8d8 !important;
+  border-bottom: 2px solid #d8d8d8 !important;
+}
+
+html.theme-dark .table-day-separator td {
+  color: #aaaaaa;
+  background: #262626;
+  border-top: 2px solid #3a3a3a !important;
+  border-bottom: 2px solid #3a3a3a !important;
+}
+
+/* ==========================================================================
    Mode sombre (piloté par la classe .theme-dark sur <body>, via theme.js)
    ========================================================================== */
 
-body.theme-dark {
+html.theme-dark,
+html.theme-dark body {
   background: #1e1e1e;
   color: #e0e0e0;
 }
 
 /* Cartes, navbar */
-body.theme-dark .card,
-body.theme-dark .dashboard-card,
-body.theme-dark .navbar {
+html.theme-dark .card,
+html.theme-dark .dashboard-card,
+html.theme-dark .navbar {
   background: #2a2a2a !important;
   color: #e0e0e0;
 }
-body.theme-dark .card-header {
+html.theme-dark .card-header {
   background: #2a2a2a !important;
   border-color: #3a3a3a;
   color: #e0e0e0;
 }
 
 /* Titres et textes */
-body.theme-dark h1,
-body.theme-dark h2,
-body.theme-dark h3,
-body.theme-dark h4,
-body.theme-dark h5,
-body.theme-dark h6,
-body.theme-dark .page-header h2,
-body.theme-dark label,
-body.theme-dark dt,
-body.theme-dark dd {
+html.theme-dark h1,
+html.theme-dark h2,
+html.theme-dark h3,
+html.theme-dark h4,
+html.theme-dark h5,
+html.theme-dark h6,
+html.theme-dark .page-header h2,
+html.theme-dark label,
+html.theme-dark dt,
+html.theme-dark dd {
   color: #e0e0e0 !important;
 }
-body.theme-dark .text-muted {
+html.theme-dark .text-muted {
   color: #9a9a9a !important;
 }
 
 /* Tableaux */
-body.theme-dark .table {
+html.theme-dark .table {
   color: #e0e0e0;
   --bs-table-color: #e0e0e0;
   --bs-table-bg: transparent;
 }
-body.theme-dark .table thead th {
+html.theme-dark .table thead th {
   background: #2a2a2a;
   color: #e0e0e0;
   border-color: #3a3a3a;
 }
-body.theme-dark .table td,
-body.theme-dark .table th {
+html.theme-dark .table td,
+html.theme-dark .table th {
   border-color: #3a3a3a;
 }
-body.theme-dark .table-hover > tbody > tr:hover > * {
+html.theme-dark .table-hover > tbody > tr:hover > * {
   background: #333333;
   color: #e0e0e0;
 }
-body.theme-dark .table-striped > tbody > tr:nth-of-type(odd) > * {
+html.theme-dark .table-striped > tbody > tr:nth-of-type(odd) > * {
   background: #262626;
   color: #e0e0e0;
 }
 
 /* Formulaires */
-body.theme-dark .form-control,
-body.theme-dark .form-select {
+html.theme-dark .form-control,
+html.theme-dark .form-select {
   background: #2a2a2a;
   color: #e0e0e0;
   border-color: #3a3a3a;
 }
-body.theme-dark .form-control:focus,
-body.theme-dark .form-select:focus {
+html.theme-dark .form-control:focus,
+html.theme-dark .form-select:focus {
   background: #2a2a2a;
   color: #e0e0e0;
   border-color: var(--color-primary, #04a59d);
 }
-body.theme-dark .form-control::placeholder {
+html.theme-dark .form-control::placeholder {
   color: #888888;
 }
 
 /* Modals */
-body.theme-dark .modal-content {
+html.theme-dark .modal-content {
   background: #2a2a2a;
   color: #e0e0e0;
 }
-body.theme-dark .modal-header,
-body.theme-dark .modal-footer {
+html.theme-dark .modal-header,
+html.theme-dark .modal-footer {
   border-color: #3a3a3a;
 }
 
@@ -337,17 +472,30 @@ body.theme-dark .modal-footer {
   display: inline-block;
 }
 .chart-dot-gain {
-  background: #28a745;
+  background: var(--color-blue, #0492a5);
 }
 .chart-dot-perte {
-  background: #c83f49;
+  background: var(--color-grenat, #7c1f25);
 }
 
-body.theme-dark .chart-doughnut-center {
+html.theme-dark .chart-doughnut-center {
   color: #e0e0e0;
 }
-body.theme-dark .chart-mini-legend li {
+html.theme-dark .chart-mini-legend li {
   color: #cccccc;
+}
+
+/* Icônes d'action des tableaux (Modifier/Désactiver/Télécharger/Supprimer...) :
+   taille et espacement identiques, peu importe si l'icône est dans <a> ou <button> */
+.table-action-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+}
+.table-action-icon i {
+    font-size: 1rem;
+    line-height: 1;
 }
 
 /* ==========================================================================
@@ -435,5 +583,25 @@ body.theme-dark .chart-mini-legend li {
 @media (max-width: 576px) {
   .chart-canvas-wrapper {
     height: 260px;
+  }
+}
+@media (max-width: 768px) {
+  .chart-dashboard-body {
+    flex-direction: column;
+  }
+
+  .chart-main-panel,
+  .chart-side-panel {
+    width: 100%;
+    flex: 1 1 100%;
+    min-width: 0;
+  }
+
+  .chart-side-panel {
+    margin-top: 0;
+  }
+
+  .chart-doughnut-wrap {
+    margin: 0 auto;
   }
 }

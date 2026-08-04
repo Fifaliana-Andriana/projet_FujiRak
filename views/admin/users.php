@@ -43,13 +43,14 @@
                     <th class="text-center">Classe</th>
                     <th class="text-center">Rôle</th>
                     <th class="text-center">Statut</th>
+                    <th class="text-center">Solde</th>
                     <th class="text-center">Inscrit le</th>
                     <th class="text-center">Action</th>
                 </tr>
             </thead>
             <tbody>
                 <?php if (empty($users)): ?>
-                    <tr><td colspan="7" class="text-center text-muted py-4">Aucun utilisateur trouvé.</td></tr>
+                    <tr><td colspan="8" class="text-center text-muted py-4">Aucun utilisateur trouvé.</td></tr>
                 <?php else: ?>
                     <?php foreach ($users as $u): ?>
                         <tr>
@@ -68,16 +69,20 @@
                                     <span class="badge bg-secondary">Désactivé</span>
                                 <?php endif; ?>
                             </td>
+                            <td class="text-center">
+                                <?php $solde = $soldes[$u['id']] ?? 0.0; ?>
+                                <span class="<?= $solde < 0 ? 'text-danger' : 'text-success' ?> fw-bold">
+                                    <?= number_format($solde, 2, ',', ' ') ?> €
+                                </span>
+                            </td>
                             <td class="text-center"><?= date('d/m/Y', strtotime($u['created_at'])) ?></td>
                             <td class="text-center">
-                                <a href="index.php?route=admin/edit-user&id=<?= $u['id'] ?>" class="me-2">
-                                   <i class="bi bi-pencil-square text-success"></i>
-                                </a>
-                                <?php if ($u['is_active'] && $u['id'] != $_SESSION['user_id']): ?>
-                                    <a href="index.php?route=admin/delete-user&id=<?= $u['id'] ?>">
-                                        <i class="bi bi-trash text-danger"></i>
-                                    </a>
-                                <?php endif; ?>
+                               <a href="index.php?route=admin/edit-user&id=<?= $u['id'] ?>" class="table-action-icon me-2">
+                                <i class="bi bi-pencil-square text-success"></i>
+                            </a><?php if ($u['is_active'] && $u['id'] != $_SESSION['user_id']): ?><a
+                                    href="index.php?route=admin/delete-user&id=<?= $u['id'] ?>" class="table-action-icon">
+                                    <i class="bi bi-trash text-danger"></i>
+                                </a><?php endif; ?>
                             </td>
                         </tr>
                     <?php endforeach; ?>

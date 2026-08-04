@@ -42,7 +42,14 @@
                 <ul class="dropdown-menu dropdown-menu-end lineargradient">
 
                     <li class="dropdown-header text-white">
-                        <?= $_SESSION['username'] ?? 'Utilisateur'; ?>
+                        <?= htmlspecialchars($_SESSION['username'] ?? 'Utilisateur'); ?>
+                        <span class="d-block role-label">
+                            <?= ($_SESSION['user_role'] ?? null) === 'admin' ? 'Admin' : 'Utilisateur' ?>
+                        </span>
+                    </li>
+
+                    <li>
+                        <hr class="dropdown-divider">
                     </li>
 
                     <li class="">
@@ -54,6 +61,13 @@
 
                     <li>
                         <hr class="dropdown-divider">
+                    </li>
+
+                    <li class="">
+                        <a class="text-white btnProfilStyle" href="index.php?route=logout">
+                            <i class="bi bi-box-arrow-right"></i>
+                            Déconnexion
+                        </a>
                     </li>
 
                 </ul>

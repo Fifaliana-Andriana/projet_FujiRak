@@ -83,7 +83,9 @@
                         <td colspan="4" class="text-center text-muted py-4">Aucune transaction pour le moment.</td>
                     </tr>
                 <?php else: ?>
+                    <?php $lastDay = null; ?>
                     <?php foreach ($transactions as $t): ?>
+                        <?php table_render_day_separator($t['date_transaction'], $lastDay, 4); ?>
                         <tr>
                             <td><?= date('d/m/Y', strtotime($t['date_transaction'])) ?></td>
                             <td>

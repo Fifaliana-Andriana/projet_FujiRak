@@ -1,3 +1,4 @@
+<?php require_once 'views/components/table_helpers.php'; ?>
 <?php require 'views/layouts/header.php'; ?>
 
 <?php

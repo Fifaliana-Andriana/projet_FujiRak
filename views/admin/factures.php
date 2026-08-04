@@ -78,17 +78,16 @@
                                     <td class="text-center"><?= htmlspecialchars($f['description'] ?? '') ?></td>
                                     <td class="text-center"><?= round($f['file_size'] / 1024) ?> Ko</td>
                                     <td class="text-center"><?= date('d/m/Y', strtotime($f['created_at'])) ?></td>
-                                    <td class="text-center">
-                                        <a href="index.php?route=download/facture&id=<?= $f['id'] ?>" class="">
-                                            <i class="bi bi-download text-primary"></i>
-                                        </a>
-                                        <form action="index.php?route=admin/factures/delete" method="POST" class="d-inline"
-                                              onsubmit="return confirm('Supprimer ce document ?');">
-                                            <input type="hidden" name="facture_id" value="<?= $f['id'] ?>">
-                                            <button type="submit" class="btn btn-sm p-0 border-0 bg-transparent">
-                                                <i class="bi bi-trash text-danger"></i>
-                                            </button>
-                                        </form>
+                                   <td class="text-center">
+                                        <a href="index.php?route=download/facture&id=<?= $f['id'] ?>" class="table-action-icon me-2">
+    <i class="bi bi-download text-primary"></i>
+</a><form action="index.php?route=admin/factures/delete" method="POST" class="d-inline"
+      onsubmit="return confirm('Supprimer ce document ?');">
+    <input type="hidden" name="facture_id" value="<?= $f['id'] ?>">
+    <button type="submit" class="table-action-icon btn btn-sm p-0 border-0 bg-transparent">
+        <i class="bi bi-trash text-danger"></i>
+    </button>
+</form>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>

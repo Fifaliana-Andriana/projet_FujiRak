@@ -11,7 +11,7 @@
 <?php endif; ?>
 
 <div class="card shadow-sm d-flex align-items-center justify-content-center w-100">
-    <div class="card-body w-50">
+    <div class="card-body form-card-body">
         <form action="index.php?route=admin/create-user" method="POST">
 
             <div class="mb-3">

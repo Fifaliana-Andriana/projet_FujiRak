@@ -5,7 +5,7 @@
     <a href="index.php?route=user/dashboard"
        class="sidebar-link <?= $currentRoute === 'user/dashboard' ? 'active' : 'bolder' ?>">
         <i class="bi bi-house-door"></i>
-        <span>Accueil</span>
+        <span>Tableau de bord</span>
     </a>
 
     <a href="index.php?route=user/profile"

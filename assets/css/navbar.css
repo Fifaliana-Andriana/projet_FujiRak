@@ -57,3 +57,9 @@
 .bolder{
   font-weight: bolder;
 }
+
+.role-label {
+  font-size: 12px;
+  font-weight: normal;
+  opacity: 0.8;
+}

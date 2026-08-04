@@ -92,6 +92,7 @@ class DashboardController
         $classeFilter = $_GET['classe'] ?? null;
         $users = $this->userModel->getAllUsers($classeFilter);
         $classCounts = $this->userModel->getClassCounts();
+        $soldes = $this->financeModel->getSoldesByUsers();
         $classeFilter = $classeFilter;
 
         $page = 'views/admin/users.php';

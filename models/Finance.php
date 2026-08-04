@@ -218,6 +218,31 @@ LIMIT ?
             $this->getTotalPertes();
     }
 
+    // Solde (gains - pertes) de chaque utilisateur, en une seule requête agrégée
+    // (évite le N+1 : indispensable pour l'afficher dans la liste des utilisateurs).
+    public function getSoldesByUsers(): array
+    {
+        $sql = "
+            SELECT user_id, COALESCE(SUM(montant), 0) AS total
+            FROM (
+                SELECT user_id, montant FROM gains
+                UNION ALL
+                SELECT user_id, -montant AS montant FROM pertes
+            ) AS mouvements
+            GROUP BY user_id
+        ";
+
+        $stmt = $this->conn->query($sql);
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $soldes = [];
+        foreach ($rows as $row) {
+            $soldes[(int) $row['user_id']] = (float) $row['total'];
+        }
+
+        return $soldes;
+    }
+
     public function getTodayGains()
     {
         $sql = "SELECT COALESCE(SUM(montant),0) AS total

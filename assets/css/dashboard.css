@@ -32,7 +32,7 @@
 /* Export button */
 .btn-export {
     padding: 8px 15px;
-    background: #28a745;
+    background: var(--color-blue, #0492a5);
     color: white;
     border: none;
     border-radius: 5px;
@@ -42,7 +42,7 @@
 }
 
 .btn-export:hover {
-    background: #218838;
+    background: var(--color-blue-hover, #037985);
     transform: translateY(-1px);
 }
 
@@ -143,10 +143,10 @@
 
 /* Variantes par type */
 .gain-card .card-icon {
-    background: #28a745;
+    background: var(--color-blue, #0492a5);
 }
 .gain-card .card-content h2 {
-    color: #28a745;
+    color: var(--color-blue, #0492a5);
 }
 
 .perte-card .card-icon {

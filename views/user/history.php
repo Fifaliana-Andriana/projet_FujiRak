@@ -19,7 +19,9 @@
                 <?php if (empty($transactions)): ?>
                     <tr><td colspan="5" class="text-center text-muted py-4">Aucune transaction trouvée.</td></tr>
                 <?php else: ?>
+                    <?php $lastDay = null; ?>
                     <?php foreach ($transactions as $item): ?>
+                        <?php table_render_day_separator($item['date_transaction'], $lastDay, 5); ?>
                         <tr>
                             <td><?= date('d/m/Y', strtotime($item['date_transaction'])) ?></td>
                             <td>

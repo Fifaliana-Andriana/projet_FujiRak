@@ -70,7 +70,9 @@
                         <td colspan="5" class="text-center text-muted py-4">Aucune transaction pour le moment.</td>
                     </tr>
                 <?php else: ?>
+                    <?php $lastDay = null; ?>
                     <?php foreach ($lastTransactions as $transaction): ?>
+                        <?php table_render_day_separator($transaction['date'], $lastDay, 5); ?>
                         <tr>
                             <td><?= htmlspecialchars($transaction['username']) ?></td>
                             <td>

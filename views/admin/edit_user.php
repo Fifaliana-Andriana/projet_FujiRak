@@ -93,7 +93,7 @@
 
                     <div class="mb-3">
                         <label class="form-label fw-bold">Type</label>
-                        <select name="type" class="form-select">
+                        <select id="type" name="type" class="form-select">
                             <option value="gain">Gain</option>
                             <option value="perte">Perte</option>
                         </select>
@@ -110,8 +110,12 @@
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label fw-bold">Source / Catégorie</label>
-                        <input type="text" name="meta" class="form-control">
+                        <label class="form-label fw-bold">Catégorie</label>
+                        <select name="meta" id="categorie" class="form-control">
+                            <option value="Depôt">Depôt</option>
+                            <option value="Retrait">Retrait</option>
+                        </select>
+                        
                     </div>
 
                     <div class="mb-4">
@@ -127,3 +131,23 @@
         </div>
     </div>
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const typeSelect = document.getElementById('type');
+        const categorieSelect = document.getElementById('categorie');
+
+        function updateCategorie() {
+            if (typeSelect.value === 'gain') {
+                categorieSelect.value = 'Depôt';
+            } else if (typeSelect.value === 'perte') {
+                categorieSelect.value = 'Retrait';
+            }
+        }
+
+        // 1. Mise à jour automatique au changement de sélection
+        typeSelect.addEventListener('change', updateCategorie);
+
+        // 2. Initialisation au chargement de la page
+        updateCategorie();
+    });
+</script>

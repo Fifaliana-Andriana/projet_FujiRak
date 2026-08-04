@@ -20,7 +20,16 @@ $trendData = array_map('intval', array_column($registrationStats, 'total'));
     </div>
     <div class="col-lg-3 col-md-6">
         <div class="dashboard-card">
-            <div class="card-icon" style="background:#C0C0C0;"><i class="bi bi-person"></i></div>
+            <div class="card-icon class-badge" style="background: linear-gradient(
+    135deg,
+    #c0c0c0 0%,
+    #f5f5f5 45%,
+    #a8a8a8 55%,
+    #eeeeee 75%,
+    #8e8e8e 100%
+  );
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6);
+  box-shadow: 0 2px 6px rgba(120, 120, 120, 0.4);"><i class="bi bi-person"></i></div>
             <div class="card-content">
                 <small>Classe Simple</small>
                 <h2><?= $classCounts['simple'] ?></h2>
@@ -29,7 +38,15 @@ $trendData = array_map('intval', array_column($registrationStats, 'total'));
     </div>
     <div class="col-lg-3 col-md-6">
         <div class="dashboard-card">
-            <div class="card-icon" style="background:#FFD700;"><i class="bi bi-person"></i></div>
+            <div class="card-icon class-badge" style="
+  background: linear-gradient(
+    135deg,
+    #bf953f 0%,
+    #fcf6ba 45%,
+    #b38728 55%,
+    #fbf5b7 75%,
+    #aa771c 100%
+  );"><i class="bi bi-person"></i></div>
             <div class="card-content">
                 <small>Classe Gold</small>
                 <h2><?= $classCounts['gold'] ?></h2>
@@ -38,7 +55,14 @@ $trendData = array_map('intval', array_column($registrationStats, 'total'));
     </div>
     <div class="col-lg-3 col-md-6">
         <div class="dashboard-card">
-            <div class="card-icon" style="background:#FFD700;"><i class="bi bi-person"></i>
+            <div class="card-icon class-badge" style="background: linear-gradient(
+    135deg,
+    #bf953f 0%,
+    #fcf6ba 45%,
+    #b38728 55%,
+    #fbf5b7 75%,
+    #aa771c 100%
+  );"><i class="bi bi-person"></i>
                 <p class="bolder">+</p>
             </div>
             <div class="card-content">
